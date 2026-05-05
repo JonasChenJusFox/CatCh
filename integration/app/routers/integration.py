@@ -1,9 +1,16 @@
 """Integration service routes for shared CatCh contracts."""
 
+import os
+
 from fastapi import APIRouter
 from pydantic import BaseModel
 
 router = APIRouter(prefix="/integration", tags=["integration"])
+
+AUTH_SERVICE_URL = os.getenv("AUTH_SERVICE_URL", "http://localhost:8002")
+TEACHER_SERVICE_URL = os.getenv("TEACHER_SERVICE_URL", "http://localhost:8003")
+GAME_SERVICE_URL = os.getenv("GAME_SERVICE_URL", "http://localhost:8000")
+GRADER_SERVICE_URL = os.getenv("GRADER_SERVICE_URL", "http://localhost:8001")
 
 
 class ServiceEndpoint(BaseModel):
@@ -65,12 +72,12 @@ async def service_map():
     return [
         ServiceEndpoint(
             service="auth-service",
-            base_url="http://localhost:8002",
+            base_url=AUTH_SERVICE_URL,
             owns=["email verification", "JWT", "cat/kitten role claims"],
         ),
         ServiceEndpoint(
             service="teacher-service",
-            base_url="http://localhost:8003",
+            base_url=TEACHER_SERVICE_URL,
             owns=[
                 "cat fish pond management",
                 "problem creation",
@@ -79,7 +86,7 @@ async def service_map():
         ),
         ServiceEndpoint(
             service="game-service",
-            base_url="http://localhost:8000",
+            base_url=GAME_SERVICE_URL,
             owns=[
                 "kitten gameplay",
                 "fishing chances",
@@ -90,7 +97,7 @@ async def service_map():
         ),
         ServiceEndpoint(
             service="grader-service",
-            base_url="http://localhost:8001",
+            base_url=GRADER_SERVICE_URL,
             owns=["local Python code checking", "student submission verdicts"],
         ),
     ]
