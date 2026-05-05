@@ -1,0 +1,166 @@
+# Top-level docker-compose for Fish_Likes_Cat.
+# Includes MongoDB plus the Python backend services.
+# Frontend apps are run separately with Vite during development.
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: flc-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-password}
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 2s
+      retries: 5
+
+  grader-service:
+    build: ./grader-service
+    container_name: flc-grader-service
+    networks:
+      - backend
+    mem_limit: 512m
+    pids_limit: 256
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m
+    environment:
+      GRADER_TIMEOUT_SECONDS: "10"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/health')"]
+      interval: 5s
+      timeout: 2s
+      retries: 5
+
+  auth-service:
+    build: ./auth-service
+    container_name: flc-auth-service
+    networks:
+      - backend
+    environment:
+      SMTP_SERVER: ${SMTP_SERVER:-smtp.gmail.com}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SENDER_EMAIL: ${SENDER_EMAIL:-your-email@gmail.com}
+      SENDER_PASSWORD: ${SENDER_PASSWORD:-}
+      AUTH_DEMO_MODE: ${AUTH_DEMO_MODE:-false}
+      JWT_SECRET: ${JWT_SECRET:-change-me-for-local-dev}
+      JWT_ALGORITHM: HS256
+      JWT_EXPIRY_HOURS: 24
+      MONGO_URL: mongodb://admin:${MONGO_INITDB_ROOT_PASSWORD:-password}@mongo:27017/?authSource=admin
+      MONGO_DB: ${MONGO_DB:-fish_likes_cat}
+      ALLOWED_ORIGINS: http://localhost:5173,http://localhost:5174,http://localhost:5175,http://localhost:3000
+    ports:
+      - "8002:8002"
+    depends_on:
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8002/health')"]
+      interval: 5s
+      timeout: 2s
+      retries: 5
+
+  teacher-service:
+    build: ./teacher-service
+    container_name: flc-teacher-service
+    networks:
+      - backend
+    environment:
+      GAME_SERVICE_URL: http://game-service:8000
+      AUTH_SERVICE_URL: http://auth-service:8002
+      ALLOWED_ORIGINS: http://localhost:5173,http://localhost:5174,http://localhost:5175,http://localhost:3000
+    ports:
+      - "8003:8003"
+    depends_on:
+      game-service:
+        condition: service_healthy
+      auth-service:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8003/health')"]
+      interval: 5s
+      timeout: 2s
+      retries: 5
+
+  integration:
+    build: ./integration
+    container_name: flc-integration
+    networks:
+      - backend
+    ports:
+      - "8004:8004"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8004/integration/health')"]
+      interval: 5s
+      timeout: 2s
+      retries: 5
+
+  game-service:
+    build:
+      context: .
+      dockerfile: game-service/Dockerfile
+    container_name: flc-game-service
+    ports:
+      - "8000:8000"
+    environment:
+      GRADER_SERVICE_URL: http://grader-service:8001
+      DB_BACKEND: ${DB_BACKEND:-mongo}
+      MONGO_URL: mongodb://admin:${MONGO_INITDB_ROOT_PASSWORD:-password}@mongo:27017/?authSource=admin
+      MONGO_DB: ${MONGO_DB:-fish_likes_cat}
+      ALLOWED_ORIGINS: http://localhost:5173,http://localhost:5174,http://localhost:5175,http://localhost:3000
+      LOG_LEVEL: INFO
+    depends_on:
+      mongo:
+        condition: service_healthy
+      grader-service:
+        condition: service_healthy
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 5s
+      timeout: 2s
+      retries: 5
+
+  web-app:
+    build:
+      context: ./frontend/app
+      args:
+        VITE_GAME_SERVICE_URL: ${VITE_GAME_SERVICE_URL:-http://localhost:8000}
+        VITE_AUTH_SERVICE_URL: ${VITE_AUTH_SERVICE_URL:-http://localhost:8002}
+        VITE_TEACHER_SERVICE_URL: ${VITE_TEACHER_SERVICE_URL:-http://localhost:8003}
+        VITE_INTEGRATION_SERVICE_URL: ${VITE_INTEGRATION_SERVICE_URL:-http://localhost:8004}
+    container_name: flc-web-app
+    ports:
+      - "${WEB_APP_PORT:-3000}:80"
+    depends_on:
+      game-service:
+        condition: service_healthy
+      auth-service:
+        condition: service_healthy
+      teacher-service:
+        condition: service_healthy
+      integration:
+        condition: service_healthy
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  mongo-data:
