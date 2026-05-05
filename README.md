@@ -16,10 +16,10 @@ Deployed on Digital Ocean: **https://catch-a8gtz.ondigitalocean.app**
 | Service | URL |
 |---|---|
 | Web app | https://catch-a8gtz.ondigitalocean.app |
-| game-service | https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-game-servi |
-| grader-service | https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-grader-ser |
-| auth-service | https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-auth-servi |
-| teacher-service | https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-teacher-se |
+| game-service | [https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-game-service](https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-game-service) |
+| grader-service | [https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-grader-service](https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-grader-service) |
+| auth-service | [https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-auth-service](https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-auth-service) |
+| teacher-service | [https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-teacher-service](https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-teacher-service) |
 
 ## Team
 
