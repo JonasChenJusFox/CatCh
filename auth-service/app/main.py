@@ -19,6 +19,7 @@ from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr, Field
 from pymongo import MongoClient
+from pymongo.errors import PyMongoError
 
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
 SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
@@ -39,7 +40,7 @@ ALLOWED_ORIGINS = os.getenv(
 
 UserRole = Literal["kitten", "cat"]
 
-# In-memory template store. Replace with Redis or MongoDB TTL collection later.
+# In-memory fallback for local tests and development without Mongo.
 verification_codes: dict[str, dict] = {}
 mongo_client = (
     MongoClient(MONGO_URL, serverSelectionTimeoutMS=5000) if MONGO_URL else None
@@ -138,6 +139,23 @@ def users_collection():
     return mongo_client[MONGO_DB].users
 
 
+def verification_collection():
+    """Return the verification-code collection when Mongo is configured."""
+
+    if mongo_client is None:
+        return None
+    return mongo_client[MONGO_DB].email_verification_codes
+
+
+def mongo_unavailable_error() -> HTTPException:
+    """Return a stable API error for MongoDB connectivity failures."""
+
+    return HTTPException(
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        detail="Authentication database is unavailable",
+    )
+
+
 def utc_now() -> datetime:
     """Return an aware UTC datetime for token and code timestamps."""
 
@@ -166,37 +184,108 @@ def find_or_create_user(email: str, role: UserRole, username: str) -> dict:
             "role": role,
         }
 
-    existing = collection.find_one({"email": email, "role": role})
-    if existing:
-        collection.update_one(
-            {"_id": existing["_id"]},
-            {"$set": {"username": display_name, "last_login_at": utc_now()}},
-        )
-        return {
-            "user_id": existing["_id"],
-            "username": display_name,
-            "email": existing["email"],
-            "role": existing["role"],
-        }
+    try:
+        existing = collection.find_one({"email": email, "role": role})
+        if existing:
+            user_id = str(existing.get("user_id") or existing["_id"])
+            collection.update_one(
+                {"_id": existing["_id"]},
+                {
+                    "$set": {
+                        "user_id": user_id,
+                        "username": display_name,
+                        "last_login_at": utc_now(),
+                    }
+                },
+            )
+            return {
+                "user_id": user_id,
+                "username": display_name,
+                "email": existing["email"],
+                "role": existing["role"],
+            }
 
-    now = utc_now()
-    user_id = f"{role}_{int(now.timestamp() * 1000)}"
-    profile = {
-        "_id": user_id,
-        "user_id": user_id,
-        "username": display_name,
-        "email": email,
-        "role": role,
-        "created_at": now,
-        "last_login_at": now,
-    }
-    collection.insert_one(profile)
-    return {
-        "user_id": user_id,
-        "username": display_name,
-        "email": email,
-        "role": role,
-    }
+        now = utc_now()
+        user_id = f"{role}_{int(now.timestamp() * 1000)}"
+        profile = {
+            "_id": user_id,
+            "user_id": user_id,
+            "username": display_name,
+            "email": email,
+            "role": role,
+            "created_at": now,
+            "last_login_at": now,
+        }
+        collection.insert_one(profile)
+        return {
+            "user_id": user_id,
+            "username": display_name,
+            "email": email,
+            "role": role,
+        }
+    except PyMongoError as exc:
+        print(f"Mongo user error: {exc}")
+        raise mongo_unavailable_error() from exc
+
+
+def save_verification_code(email: str, payload: dict) -> None:
+    """Persist a verification code in Mongo or the local fallback store."""
+
+    collection = verification_collection()
+    if collection is None:
+        verification_codes[email] = payload
+        return
+
+    document = {"_id": email, "email": email, **payload}
+    try:
+        collection.replace_one({"_id": email}, document, upsert=True)
+    except PyMongoError as exc:
+        print(f"Mongo verification save error: {exc}")
+        raise mongo_unavailable_error() from exc
+
+
+def get_verification_code(email: str) -> Optional[dict]:
+    """Return a verification-code payload from Mongo or local fallback."""
+
+    collection = verification_collection()
+    if collection is None:
+        return verification_codes.get(email)
+
+    try:
+        return collection.find_one({"_id": email})
+    except PyMongoError as exc:
+        print(f"Mongo verification read error: {exc}")
+        raise mongo_unavailable_error() from exc
+
+
+def delete_verification_code(email: str) -> None:
+    """Remove a verification-code payload from Mongo or local fallback."""
+
+    collection = verification_collection()
+    if collection is None:
+        verification_codes.pop(email, None)
+        return
+
+    try:
+        collection.delete_one({"_id": email})
+    except PyMongoError as exc:
+        print(f"Mongo verification delete error: {exc}")
+        raise mongo_unavailable_error() from exc
+
+
+def increment_verification_attempts(email: str, stored: dict) -> None:
+    """Track a failed verification attempt."""
+
+    collection = verification_collection()
+    if collection is None:
+        stored["attempts"] += 1
+        return
+
+    try:
+        collection.update_one({"_id": email}, {"$inc": {"attempts": 1}})
+    except PyMongoError as exc:
+        print(f"Mongo verification attempt error: {exc}")
+        raise mongo_unavailable_error() from exc
 
 
 def send_verification_email(
@@ -322,14 +411,17 @@ def send_verification_email_endpoint(request: SendVerificationEmailRequest):
 
     code = str(secrets.randbelow(1_000_000)).zfill(6)
     expiry = utc_now() + timedelta(minutes=10)
-    verification_codes[str(request.email)] = {
-        "code": code,
-        "role": request.role,
-        "username": request.username,
-        "created_at": utc_now(),
-        "expires_at": expiry,
-        "attempts": 0,
-    }
+    save_verification_code(
+        str(request.email),
+        {
+            "code": code,
+            "role": request.role,
+            "username": request.username,
+            "created_at": utc_now(),
+            "expires_at": expiry,
+            "attempts": 0,
+        },
+    )
 
     email_sent = send_verification_email(str(request.email), code, request.role)
     response = {
@@ -348,7 +440,7 @@ def verify_email_endpoint(request: VerifyEmailRequest):
     """Validate a verification code and issue a role-aware JWT."""
 
     email = str(request.email)
-    stored = verification_codes.get(email)
+    stored = get_verification_code(email)
     if stored is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -356,21 +448,21 @@ def verify_email_endpoint(request: VerifyEmailRequest):
         )
 
     if utc_now() > stored["expires_at"]:
-        del verification_codes[email]
+        delete_verification_code(email)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Verification code has expired",
         )
 
     if stored["attempts"] >= 5:
-        del verification_codes[email]
+        delete_verification_code(email)
         raise HTTPException(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
             detail="Too many failed attempts",
         )
 
     if stored["code"] != request.code:
-        stored["attempts"] += 1
+        increment_verification_attempts(email, stored)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid verification code",
@@ -388,7 +480,7 @@ def verify_email_endpoint(request: VerifyEmailRequest):
         role,
         profile["username"],
     )
-    del verification_codes[email]
+    delete_verification_code(email)
 
     return AuthResponse(
         token=token,
