@@ -1,67 +1,79 @@
 """Auth Service for CatCh.
 
-This service owns email verification and JWT creation. It only describes the
-authenticated user's role; gameplay permissions are enforced by downstream
-services.
+This service owns username/password authentication and JWT creation. It only
+describes the authenticated user's role; gameplay permissions are enforced by
+downstream services.
 """
 
+import base64
+import hashlib
+import hmac
 from datetime import datetime, timedelta, timezone
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from typing import Literal, Optional
 import os
 import re
 import secrets
-import smtplib
 
 import jwt
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, EmailStr, Field
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError
 
-SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
-SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
-SENDER_EMAIL = os.getenv("SENDER_EMAIL", "your-email@gmail.com")
-SENDER_PASSWORD = os.getenv("SENDER_PASSWORD", "").replace(" ", "")
-AUTH_DEMO_MODE = os.getenv("AUTH_DEMO_MODE", "false").lower() == "true"
 MONGO_URL = os.getenv("MONGO_URL", "")
 MONGO_DB = os.getenv("MONGO_DB", "fish_likes_cat")
 
 JWT_SECRET = os.getenv("JWT_SECRET", "your-super-secret-key-change-in-production")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 JWT_EXPIRY_HOURS = int(os.getenv("JWT_EXPIRY_HOURS", "24"))
+PASSWORD_HASH_ITERATIONS = int(os.getenv("PASSWORD_HASH_ITERATIONS", "210000"))
 ALLOWED_ORIGINS = os.getenv(
     "ALLOWED_ORIGINS",
     "http://localhost:5173,http://localhost:5174,"
     "http://localhost:5175,http://localhost:3000",
 )
+BUILD_VERSION = os.getenv("BUILD_VERSION", "auth-password-v1")
 
 UserRole = Literal["kitten", "cat"]
 
 # In-memory fallback for local tests and development without Mongo.
-verification_codes: dict[str, dict] = {}
+local_users: dict[str, dict] = {}
 mongo_client = (
     MongoClient(MONGO_URL, serverSelectionTimeoutMS=5000) if MONGO_URL else None
 )
 
 
-class SendVerificationEmailRequest(BaseModel):
-    """Request body for creating and sending a verification code."""
+class SignUpRequest(BaseModel):
+    """Request body for creating a username/password account."""
 
+    username: str = Field(min_length=2, max_length=40)
+    password: str = Field(min_length=8, max_length=128)
     email: EmailStr
-    username: str = Field(default="", max_length=40)
     role: UserRole = Field(default="kitten")
 
 
-class VerifyEmailRequest(BaseModel):
-    """Request body for validating an email verification code."""
+class LoginRequest(BaseModel):
+    """Request body for signing in with username and password."""
 
+    username: str = Field(min_length=2, max_length=40)
+    password: str = Field(min_length=8, max_length=128)
+
+
+class ForgotPasswordRequest(BaseModel):
+    """Request body for resetting a password."""
+
+    username: str = Field(min_length=2, max_length=40)
     email: EmailStr
-    code: str = Field(min_length=6, max_length=6)
-    username: str = Field(default="", max_length=40)
-    role: UserRole = Field(default="kitten")
+    new_password: str = Field(min_length=8, max_length=128)
+
+
+class SimpleStatusResponse(BaseModel):
+    """Generic success response."""
+
+    success: bool
+    message: str
 
 
 class AuthResponse(BaseModel):
@@ -139,14 +151,6 @@ def users_collection():
     return mongo_client[MONGO_DB].users
 
 
-def verification_collection():
-    """Return the verification-code collection when Mongo is configured."""
-
-    if mongo_client is None:
-        return None
-    return mongo_client[MONGO_DB].email_verification_codes
-
-
 def mongo_unavailable_error() -> HTTPException:
     """Return a stable API error for MongoDB connectivity failures."""
 
@@ -170,172 +174,186 @@ def as_utc(value: datetime) -> datetime:
     return value.astimezone(timezone.utc)
 
 
-def normalize_username(username: str, email: str) -> str:
-    """Create a display-safe username from input or the email prefix."""
+def normalize_username(username: str) -> str:
+    """Create a display-safe username from user input."""
 
-    source = username.strip() or email.split("@")[0]
-    cleaned = re.sub(r"[^A-Za-z0-9_-]+", "_", source).strip("_")
-    return cleaned[:40] or "catch_user"
+    cleaned = re.sub(r"[^A-Za-z0-9_-]+", "_", username.strip()).strip("_")
+    if len(cleaned) < 2:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Username must contain at least 2 letters, numbers, underscores, or hyphens",
+        )
+    return cleaned[:40]
 
 
-def find_or_create_user(email: str, role: UserRole, username: str) -> dict:
-    """Return a stable user profile and persist it in Mongo when configured."""
+def username_key(username: str) -> str:
+    """Return the case-insensitive lookup key for a username."""
 
-    display_name = normalize_username(username, email)
+    return normalize_username(username).lower()
+
+
+def hash_password(password: str) -> str:
+    """Return a PBKDF2 password hash safe for storage."""
+
+    salt = secrets.token_bytes(16)
+    digest = hashlib.pbkdf2_hmac(
+        "sha256",
+        password.encode("utf-8"),
+        salt,
+        PASSWORD_HASH_ITERATIONS,
+    )
+    encoded_salt = base64.b64encode(salt).decode("ascii")
+    encoded_digest = base64.b64encode(digest).decode("ascii")
+    return f"pbkdf2_sha256${PASSWORD_HASH_ITERATIONS}${encoded_salt}${encoded_digest}"
+
+
+def verify_password(password: str, stored_hash: str) -> bool:
+    """Return whether a password matches a stored PBKDF2 hash."""
+
+    try:
+        algorithm, iterations, encoded_salt, encoded_digest = stored_hash.split("$", 3)
+        if algorithm != "pbkdf2_sha256":
+            return False
+        salt = base64.b64decode(encoded_salt.encode("ascii"))
+        expected = base64.b64decode(encoded_digest.encode("ascii"))
+        actual = hashlib.pbkdf2_hmac(
+            "sha256",
+            password.encode("utf-8"),
+            salt,
+            int(iterations),
+        )
+        return hmac.compare_digest(actual, expected)
+    except (ValueError, TypeError):
+        return False
+
+
+def find_user_by_username(username: str) -> Optional[dict]:
+    """Return a user profile by username from Mongo or local storage."""
+
+    key = username_key(username)
     collection = users_collection()
     if collection is None:
-        user_id = f"{role}_{display_name.lower()}"
-        return {
-            "user_id": user_id,
-            "username": display_name,
-            "email": email,
-            "role": role,
-        }
+        return local_users.get(key)
 
     try:
-        existing = collection.find_one({"email": email, "role": role})
-        if existing:
-            user_id = str(existing.get("user_id") or existing["_id"])
-            collection.update_one(
-                {"_id": existing["_id"]},
-                {
-                    "$set": {
-                        "user_id": user_id,
-                        "username": display_name,
-                        "last_login_at": utc_now(),
-                    }
-                },
-            )
-            return {
-                "user_id": user_id,
-                "username": display_name,
-                "email": existing["email"],
-                "role": existing["role"],
-            }
+        return collection.find_one({"username_key": key})
+    except PyMongoError as exc:
+        print(f"Mongo user lookup error: {exc}")
+        raise mongo_unavailable_error() from exc
 
-        now = utc_now()
-        user_id = f"{role}_{int(now.timestamp() * 1000)}"
-        profile = {
-            "_id": user_id,
-            "user_id": user_id,
-            "username": display_name,
-            "email": email,
-            "role": role,
-            "created_at": now,
-            "last_login_at": now,
-        }
+
+def create_user(username: str, email: str, password: str, role: UserRole) -> dict:
+    """Create and persist a username/password user profile."""
+
+    display_name = normalize_username(username)
+    key = display_name.lower()
+    if find_user_by_username(display_name):
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Username is already taken",
+        )
+
+    now = utc_now()
+    user_id = f"{role}_{int(now.timestamp() * 1000)}"
+    profile = {
+        "_id": user_id,
+        "user_id": user_id,
+        "username": display_name,
+        "username_key": key,
+        "email": email,
+        "role": role,
+        "password_hash": hash_password(password),
+        "created_at": now,
+        "last_login_at": now,
+    }
+
+    collection = users_collection()
+    if collection is None:
+        local_users[key] = profile
+        return profile
+
+    try:
         collection.insert_one(profile)
-        return {
-            "user_id": user_id,
-            "username": display_name,
-            "email": email,
-            "role": role,
-        }
+        return profile
     except PyMongoError as exc:
-        print(f"Mongo user error: {exc}")
+        print(f"Mongo user create error: {exc}")
         raise mongo_unavailable_error() from exc
 
 
-def save_verification_code(email: str, payload: dict) -> None:
-    """Persist a verification code in Mongo or the local fallback store."""
+def update_user_login(user: dict) -> None:
+    """Persist a successful login timestamp."""
 
-    collection = verification_collection()
+    collection = users_collection()
     if collection is None:
-        verification_codes[email] = payload
-        return
-
-    document = {"_id": email, "email": email, **payload}
-    try:
-        collection.replace_one({"_id": email}, document, upsert=True)
-    except PyMongoError as exc:
-        print(f"Mongo verification save error: {exc}")
-        raise mongo_unavailable_error() from exc
-
-
-def get_verification_code(email: str) -> Optional[dict]:
-    """Return a verification-code payload from Mongo or local fallback."""
-
-    collection = verification_collection()
-    if collection is None:
-        return verification_codes.get(email)
-
-    try:
-        return collection.find_one({"_id": email})
-    except PyMongoError as exc:
-        print(f"Mongo verification read error: {exc}")
-        raise mongo_unavailable_error() from exc
-
-
-def delete_verification_code(email: str) -> None:
-    """Remove a verification-code payload from Mongo or local fallback."""
-
-    collection = verification_collection()
-    if collection is None:
-        verification_codes.pop(email, None)
+        user["last_login_at"] = utc_now()
         return
 
     try:
-        collection.delete_one({"_id": email})
+        collection.update_one(
+            {"_id": user["_id"]}, {"$set": {"last_login_at": utc_now()}}
+        )
     except PyMongoError as exc:
-        print(f"Mongo verification delete error: {exc}")
+        print(f"Mongo user login update error: {exc}")
         raise mongo_unavailable_error() from exc
 
 
-def increment_verification_attempts(email: str, stored: dict) -> None:
-    """Track a failed verification attempt."""
+def update_user_password(user: dict, new_password: str) -> dict:
+    """Replace a user's password hash."""
 
-    collection = verification_collection()
+    password_hash = hash_password(new_password)
+    collection = users_collection()
     if collection is None:
-        stored["attempts"] += 1
-        return
+        user["password_hash"] = password_hash
+        user["password_reset_at"] = utc_now()
+        return user
 
     try:
-        collection.update_one({"_id": email}, {"$inc": {"attempts": 1}})
+        collection.update_one(
+            {"_id": user["_id"]},
+            {"$set": {"password_hash": password_hash, "password_reset_at": utc_now()}},
+        )
+        updated = find_user_by_username(user["username"])
+        return updated or {**user, "password_hash": password_hash}
     except PyMongoError as exc:
-        print(f"Mongo verification attempt error: {exc}")
+        print(f"Mongo password reset error: {exc}")
         raise mongo_unavailable_error() from exc
 
 
-def send_verification_email(
-    to_email: str, verification_code: str, role: UserRole
-) -> bool:
-    """Send a CatCh login code. Returns False when SMTP is not configured."""
-    if not SENDER_PASSWORD:
-        print("SMTP password is not configured; skipping outbound email.")
-        return False
+def authenticate_user(username: str, password: str) -> dict:
+    """Validate username/password credentials and return the user profile."""
 
-    role_name = "cat teacher" if role == "cat" else "kitten programmer"
-    text = (
-        f"Welcome to CatCh, {role_name}.\n\n"
-        f"Your verification code is: {verification_code}\n\n"
-        "This code expires in 10 minutes."
+    user = find_user_by_username(username)
+    if not user or not verify_password(password, user.get("password_hash", "")):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid username or password",
+        )
+
+    update_user_login(user)
+    return user
+
+
+def auth_response_for_user(user: dict) -> AuthResponse:
+    """Create a JWT auth response for an existing user profile."""
+
+    role: UserRole = user.get("role", "kitten")
+    user_id = str(user.get("user_id") or user.get("_id"))
+    token, expiry = create_jwt_token(
+        user_id,
+        user["email"],
+        role,
+        user["username"],
     )
-    html = f"""
-<html>
-  <body>
-    <p>Welcome to CatCh, {role_name}.</p>
-    <p>Your verification code is <strong>{verification_code}</strong>.</p>
-    <p>This code expires in <strong>10 minutes</strong>.</p>
-  </body>
-</html>
-"""
-
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = "CatCh verification code"
-    msg["From"] = SENDER_EMAIL
-    msg["To"] = to_email
-    msg.attach(MIMEText(text, "plain"))
-    msg.attach(MIMEText(html, "html"))
-
-    try:
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-            server.starttls()
-            server.login(SENDER_EMAIL, SENDER_PASSWORD)
-            server.sendmail(SENDER_EMAIL, to_email, msg.as_string())
-        return True
-    except (OSError, smtplib.SMTPException) as exc:
-        print(f"SMTP error: {exc}")
-        return False
+    return AuthResponse(
+        token=token,
+        user_id=user_id,
+        username=user["username"],
+        email=user["email"],
+        role=role,
+        expires_at=expiry.isoformat(),
+        token_system_enabled=token_system_enabled(role),
+        permissions=permissions_for_role(role),
+    )
 
 
 def create_jwt_token(
@@ -374,7 +392,7 @@ def verify_jwt_token(token: str) -> Optional[dict]:
 
 app = FastAPI(
     title="Auth Service",
-    description="CatCh email verification and role-aware JWT generation",
+    description="CatCh username/password authentication and role-aware JWT generation",
     version="0.2.0",
 )
 app.add_middleware(
@@ -386,11 +404,27 @@ app.add_middleware(
 )
 
 
+@app.exception_handler(Exception)
+async def unexpected_error_handler(_request: Request, exc: Exception):
+    """Return debuggable errors instead of opaque platform 500 pages."""
+
+    print(f"Unexpected auth-service error: {type(exc).__name__}: {exc}")
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content={"detail": f"{type(exc).__name__}: {exc}"},
+    )
+
+
 @app.get("/health", tags=["health"])
 def health():
     """Return service health information."""
 
-    return {"status": "ok", "service": "auth-service"}
+    return {
+        "status": "ok",
+        "service": "auth-service",
+        "version": BUILD_VERSION,
+        "mongo_enabled": mongo_client is not None,
+    }
 
 
 @app.get("/auth/roles", tags=["auth"])
@@ -413,93 +447,51 @@ def roles():
     }
 
 
-@app.post("/auth/send-verification-email", tags=["auth"])
-def send_verification_email_endpoint(request: SendVerificationEmailRequest):
-    """Create a short-lived email verification code for the requested role."""
+@app.post("/auth/signup", response_model=AuthResponse, tags=["auth"])
+def signup_endpoint(request: SignUpRequest):
+    """Create a username/password account and issue a JWT."""
 
-    code = str(secrets.randbelow(1_000_000)).zfill(6)
-    expiry = utc_now() + timedelta(minutes=10)
-    save_verification_code(
+    user = create_user(
+        request.username,
         str(request.email),
-        {
-            "code": code,
-            "role": request.role,
-            "username": request.username,
-            "created_at": utc_now(),
-            "expires_at": expiry,
-            "attempts": 0,
-        },
+        request.password,
+        request.role,
     )
-
-    email_sent = send_verification_email(str(request.email), code, request.role)
-    response = {
-        "success": True,
-        "email_sent": email_sent,
-        "message": "Verification code created. Configure SMTP to send real email.",
-        "role": request.role,
-    }
-    if not email_sent and AUTH_DEMO_MODE:
-        response["development_code"] = code
-    return response
+    return auth_response_for_user(user)
 
 
-@app.post("/auth/verify-email", response_model=AuthResponse, tags=["auth"])
-def verify_email_endpoint(request: VerifyEmailRequest):
-    """Validate a verification code and issue a role-aware JWT."""
+@app.post("/auth/login", response_model=AuthResponse, tags=["auth"])
+def login_endpoint(request: LoginRequest):
+    """Validate username/password credentials and issue a JWT."""
 
-    email = str(request.email)
-    stored = get_verification_code(email)
-    if stored is None:
+    user = authenticate_user(request.username, request.password)
+    return auth_response_for_user(user)
+
+
+@app.post(
+    "/auth/forgot-password",
+    response_model=SimpleStatusResponse,
+    tags=["auth"],
+)
+def forgot_password_endpoint(request: ForgotPasswordRequest):
+    """Reset a password after matching the account username and email."""
+
+    user = find_user_by_username(request.username)
+    if not user or str(user.get("email", "")).lower() != str(request.email).lower():
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="No verification code found for this email",
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No account found for that username and email",
         )
 
-    if utc_now() > as_utc(stored["expires_at"]):
-        delete_verification_code(email)
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Verification code has expired",
-        )
+    update_user_password(user, request.new_password)
+    return SimpleStatusResponse(success=True, message="Password reset.")
 
-    if stored["attempts"] >= 5:
-        delete_verification_code(email)
-        raise HTTPException(
-            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-            detail="Too many failed attempts",
-        )
 
-    if stored["code"] != request.code:
-        increment_verification_attempts(email, stored)
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid verification code",
-        )
+@app.post("/auth/logout", response_model=SimpleStatusResponse, tags=["auth"])
+def logout_endpoint():
+    """Acknowledge logout; JWTs are stateless and cleared by the client."""
 
-    role: UserRole = stored.get("role", request.role)
-    profile = find_or_create_user(
-        email,
-        role,
-        request.username or stored.get("username", ""),
-    )
-    token, expiry = create_jwt_token(
-        profile["user_id"],
-        email,
-        role,
-        profile["username"],
-    )
-    delete_verification_code(email)
-
-    return AuthResponse(
-        token=token,
-        user_id=profile["user_id"],
-        username=profile["username"],
-        email=request.email,
-        role=role,
-        expires_at=expiry.isoformat(),
-        token_system_enabled=token_system_enabled(role),
-        permissions=permissions_for_role(role),
-    )
+    return SimpleStatusResponse(success=True, message="Signed out.")
 
 
 @app.post("/auth/verify-token", response_model=TokenValidationResponse, tags=["auth"])

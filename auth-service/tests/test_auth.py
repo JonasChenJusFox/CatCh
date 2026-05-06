@@ -1,9 +1,7 @@
 """Tests for the CatCh auth-service FastAPI app."""
 
 import importlib.util
-from datetime import timedelta
 from pathlib import Path
-import smtplib
 
 from fastapi.testclient import TestClient
 
@@ -16,9 +14,22 @@ client = TestClient(auth_main.app)
 
 
 def setup_function():
-    """Reset in-memory verification codes before each test."""
+    """Reset in-memory users before each test."""
 
-    auth_main.verification_codes.clear()
+    auth_main.local_users.clear()
+
+
+def signup_payload(**overrides):
+    """Return a valid signup payload with optional overrides."""
+
+    payload = {
+        "username": "Tiny Tuna",
+        "password": "correct-horse-123",
+        "email": "kitten@example.com",
+        "role": "kitten",
+    }
+    payload.update(overrides)
+    return payload
 
 
 def test_health():
@@ -39,149 +50,164 @@ def test_roles_describe_cat_and_kitten_permissions():
     assert roles["cat"]["token_system_enabled"] is False
 
 
-def test_email_code_can_be_verified_for_kitten():
-    """A generated verification code creates a kitten auth token."""
+def test_signup_creates_kitten_token_and_hashed_password():
+    """A new username/password account receives a role-aware JWT."""
 
-    email = "kitten@example.com"
-    send_response = client.post(
-        "/auth/send-verification-email",
-        json={"email": email, "username": "Tiny Tuna", "role": "kitten"},
-    )
-    assert send_response.status_code == 200
-
-    code = auth_main.verification_codes[email]["code"]
-    verify_response = client.post(
-        "/auth/verify-email",
-        json={
-            "email": email,
-            "code": code,
-            "username": "Tiny Tuna",
-            "role": "kitten",
-        },
-    )
-    assert verify_response.status_code == 200
-    body = verify_response.json()
+    response = client.post("/auth/signup", json=signup_payload())
+    assert response.status_code == 200
+    body = response.json()
     assert body["username"] == "Tiny_Tuna"
     assert body["role"] == "kitten"
     assert body["token_system_enabled"] is True
 
-    token_response = client.post(
-        "/auth/verify-token",
-        json={"token": body["token"]},
-    )
+    stored = auth_main.local_users["tiny_tuna"]
+    assert stored["password_hash"] != "correct-horse-123"
+    assert auth_main.verify_password("correct-horse-123", stored["password_hash"])
+
+    token_response = client.post("/auth/verify-token", json={"token": body["token"]})
     assert token_response.status_code == 200
     assert token_response.json()["valid"] is True
 
 
-def test_invalid_code_is_rejected():
-    """Wrong verification codes return a client error."""
+def test_two_character_username_can_sign_up():
+    """Two-character usernames are accepted."""
 
-    email = "cat@example.com"
+    response = client.post(
+        "/auth/signup",
+        json=signup_payload(username="JJ", email="jj@example.com"),
+    )
+    assert response.status_code == 200
+    assert response.json()["username"] == "JJ"
+
+
+def test_one_character_username_is_rejected():
+    """One-character usernames return a validation error."""
+
+    response = client.post(
+        "/auth/signup",
+        json=signup_payload(username="J", email="j@example.com"),
+    )
+    assert response.status_code == 422
+    detail = response.json()["detail"][0]
+    assert detail["loc"] == ["body", "username"]
+    assert detail["ctx"]["min_length"] == 2
+
+
+def test_duplicate_username_is_rejected_case_insensitively():
+    """Usernames are unique regardless of case."""
+
+    client.post("/auth/signup", json=signup_payload(username="Pond Cat"))
+    response = client.post(
+        "/auth/signup",
+        json=signup_payload(
+            username="pond cat",
+            email="another@example.com",
+            password="another-password-123",
+        ),
+    )
+    assert response.status_code == 409
+    assert response.json()["detail"] == "Username is already taken"
+
+
+def test_login_accepts_valid_credentials():
+    """A registered account can sign in with username and password."""
+
     client.post(
-        "/auth/send-verification-email",
-        json={"email": email, "username": "Professor Cat", "role": "cat"},
+        "/auth/signup",
+        json=signup_payload(
+            username="Professor Cat",
+            password="lesson-plan-123",
+            email="teacher@example.com",
+            role="cat",
+        ),
     )
 
     response = client.post(
-        "/auth/verify-email",
-        json={
-            "email": email,
-            "code": "000000",
-            "username": "Professor Cat",
-            "role": "cat",
-        },
+        "/auth/login",
+        json={"username": "professor cat", "password": "lesson-plan-123"},
     )
-    assert response.status_code == 400
-    assert response.json()["detail"] == "Invalid verification code"
+    assert response.status_code == 200
+    body = response.json()
+    assert body["username"] == "Professor_Cat"
+    assert body["role"] == "cat"
+    assert body["token_system_enabled"] is False
 
 
-def test_missing_code_is_rejected():
-    """Verifying before requesting a code returns a client error."""
+def test_login_rejects_wrong_password():
+    """Invalid passwords return an auth error."""
 
+    client.post("/auth/signup", json=signup_payload())
     response = client.post(
-        "/auth/verify-email",
+        "/auth/login",
+        json={"username": "Tiny Tuna", "password": "wrong-password"},
+    )
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Invalid username or password"
+
+
+def test_forgot_password_resets_matching_account():
+    """Forgot-password reset changes the password when username and email match."""
+
+    client.post("/auth/signup", json=signup_payload())
+    reset_response = client.post(
+        "/auth/forgot-password",
         json={
-            "email": "missing@example.com",
-            "code": "123456",
-            "username": "Missing",
-            "role": "kitten",
+            "username": "Tiny Tuna",
+            "email": "kitten@example.com",
+            "new_password": "new-correct-horse-123",
         },
     )
-    assert response.status_code == 400
-    assert response.json()["detail"] == "No verification code found for this email"
+    assert reset_response.status_code == 200
+    assert reset_response.json()["success"] is True
+
+    old_login = client.post(
+        "/auth/login",
+        json={"username": "Tiny Tuna", "password": "correct-horse-123"},
+    )
+    assert old_login.status_code == 401
+
+    new_login = client.post(
+        "/auth/login",
+        json={"username": "Tiny Tuna", "password": "new-correct-horse-123"},
+    )
+    assert new_login.status_code == 200
 
 
-def test_expired_code_is_rejected():
-    """Expired verification codes are removed and rejected."""
+def test_forgot_password_rejects_email_mismatch():
+    """Password reset requires both the username and account email."""
 
-    email = "old@example.com"
-    auth_main.verification_codes[email] = {
-        "code": "123456",
-        "role": "kitten",
-        "username": "Old Kitten",
-        "created_at": auth_main.utc_now() - timedelta(minutes=20),
-        "expires_at": auth_main.utc_now() - timedelta(minutes=1),
-        "attempts": 0,
-    }
-
+    client.post("/auth/signup", json=signup_payload())
     response = client.post(
-        "/auth/verify-email",
+        "/auth/forgot-password",
         json={
-            "email": email,
-            "code": "123456",
-            "username": "Old Kitten",
-            "role": "kitten",
+            "username": "Tiny Tuna",
+            "email": "wrong@example.com",
+            "new_password": "new-correct-horse-123",
         },
     )
-    assert response.status_code == 400
-    assert response.json()["detail"] == "Verification code has expired"
-    assert email not in auth_main.verification_codes
+    assert response.status_code == 404
+    assert response.json()["detail"] == "No account found for that username and email"
 
 
-def test_too_many_failed_code_attempts_is_rejected():
-    """The auth service rejects codes after five failed attempts."""
+def test_logout_acknowledges_client_signout():
+    """Logout returns success for the client-side session clear."""
 
-    email = "locked@example.com"
-    auth_main.verification_codes[email] = {
-        "code": "123456",
-        "role": "kitten",
-        "username": "Locked",
-        "created_at": auth_main.utc_now(),
-        "expires_at": auth_main.utc_now() + timedelta(minutes=10),
-        "attempts": 5,
-    }
-
-    response = client.post(
-        "/auth/verify-email",
-        json={
-            "email": email,
-            "code": "123456",
-            "username": "Locked",
-            "role": "kitten",
-        },
-    )
-    assert response.status_code == 429
-    assert response.json()["detail"] == "Too many failed attempts"
-    assert email not in auth_main.verification_codes
+    response = client.post("/auth/logout")
+    assert response.status_code == 200
+    assert response.json()["success"] is True
 
 
 def test_refresh_token_preserves_role():
     """Refreshing a valid token keeps role and permissions."""
 
-    email = "teacher@example.com"
-    client.post(
-        "/auth/send-verification-email",
-        json={"email": email, "username": "Pond Cat", "role": "cat"},
-    )
-    code = auth_main.verification_codes[email]["code"]
     auth_response = client.post(
-        "/auth/verify-email",
-        json={
-            "email": email,
-            "code": code,
-            "username": "Pond Cat",
-            "role": "cat",
-        },
+        "/auth/signup",
+        json=signup_payload(
+            username="Pond Cat",
+            password="lesson-plan-123",
+            email="teacher@example.com",
+            role="cat",
+        ),
     )
 
     refresh_response = client.post(
@@ -202,38 +228,3 @@ def test_invalid_tokens_are_rejected():
 
     refresh_response = client.post("/auth/refresh-token", json={"token": "not-a-token"})
     assert refresh_response.status_code == 401
-
-
-def test_send_verification_email_handles_smtp_errors(monkeypatch):
-    """SMTP failures are converted into a False delivery result."""
-
-    class FailingSmtp:
-        """Small context manager that fails during SMTP login."""
-
-        def __init__(self, server, port):
-            self.server = server
-            self.port = port
-
-        def __enter__(self):
-            return self
-
-        def __exit__(self, exc_type, exc_value, traceback):
-            return False
-
-        def starttls(self):
-            """Pretend to start TLS."""
-
-            return None
-
-        def login(self, sender, password):
-            """Fail SMTP login."""
-
-            raise smtplib.SMTPException("bad credentials")
-
-    monkeypatch.setattr(auth_main, "SENDER_PASSWORD", "configured")
-    monkeypatch.setattr(auth_main.smtplib, "SMTP", FailingSmtp)
-
-    assert (
-        auth_main.send_verification_email("kitten@example.com", "123456", "kitten")
-        is False
-    )

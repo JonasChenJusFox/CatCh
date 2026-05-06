@@ -85,11 +85,46 @@ function loadStoredSession() {
   return { token, user_id: userId, role, username: username || userId };
 }
 
+function formatApiError(data) {
+  if (Array.isArray(data.detail)) {
+    return data.detail
+      .map((item) => {
+        const field = item.loc?.[item.loc.length - 1];
+        if (
+          field === "username" &&
+          item.type === "string_too_short"
+        ) {
+          return "Username must be at least 2 characters.";
+        }
+        if (
+          field === "password" &&
+          item.type === "string_too_short"
+        ) {
+          return "Password must be at least 8 characters.";
+        }
+        if (
+          field === "new_password" &&
+          item.type === "string_too_short"
+        ) {
+          return "New password must be at least 8 characters.";
+        }
+        if (field === "email" && item.type?.includes("value_error")) {
+          return "Enter a valid email address.";
+        }
+        return item.msg || "Request failed";
+      })
+      .join(" ");
+  }
+  if (typeof data.detail === "string") return data.detail;
+  if (data.message) return data.message;
+  return "Request failed";
+}
+
 async function request(url, options = {}) {
   const response = await fetch(url, options);
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
-    throw new Error(data.detail || "Request failed");
+    throw new Error(formatApiError(data));
   }
   return data;
 }
@@ -106,85 +141,137 @@ function Status({ error, message }) {
 }
 
 function AuthPanel({ session, setSession }) {
+  const [mode, setMode] = useState("login");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [role, setRole] = useState("kitten");
-  const [code, setCode] = useState("");
+  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-  const [sending, setSending] = useState(false);
-  const [verifying, setVerifying] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  async function sendCode() {
+  function storeSession(data) {
+    localStorage.setItem("catch_user_id", data.user_id);
+    localStorage.setItem("catch_role", data.role);
+    localStorage.setItem("catch_token", data.token);
+    localStorage.setItem("catch_username", data.username);
+    localStorage.setItem("catch_session_version", SESSION_VERSION);
+    setSession(data);
+  }
+
+  function switchMode(nextMode) {
     setError("");
     setMessage("");
-    setSending(true);
+    setPassword("");
+    setNewPassword("");
+    setMode(nextMode);
+  }
+
+  async function submitAuth() {
+    setError("");
+    setMessage("");
+    setSubmitting(true);
     try {
-      const data = await request(`${AUTH_URL}/auth/send-verification-email`, {
+      if (mode === "forgot") {
+        await request(`${AUTH_URL}/auth/forgot-password`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username,
+            email,
+            new_password: newPassword,
+          }),
+        });
+        setMode("login");
+        setPassword("");
+        setNewPassword("");
+        setMessage("Password reset. Log in with the new password.");
+        return;
+      }
+
+      const endpoint = mode === "signup" ? "signup" : "login";
+      const payload =
+        mode === "signup"
+          ? { username, email, password, role }
+          : { username, password };
+      const data = await request(`${AUTH_URL}/auth/${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, username, role }),
+        body: JSON.stringify(payload),
       });
-      setMessage(
-        data.email_sent
-          ? "Code sent. Check your email."
-          : "Email was not sent. Check SMTP settings in .env.",
-      );
+      storeSession(data);
+      setMessage(mode === "signup" ? "Account created." : "Signed in.");
     } catch (err) {
       setError(err.message);
     } finally {
-      setSending(false);
+      setSubmitting(false);
     }
   }
 
-  async function verifyCode() {
-    setError("");
-    setMessage("");
-    setVerifying(true);
-    try {
-      const data = await request(`${AUTH_URL}/auth/verify-email`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, code, username, role }),
-      });
-      localStorage.setItem("catch_user_id", data.user_id);
-      localStorage.setItem("catch_role", data.role);
-      localStorage.setItem("catch_token", data.token);
-      localStorage.setItem("catch_username", data.username);
-      localStorage.setItem("catch_session_version", SESSION_VERSION);
-      setSession(data);
-      setMessage("Signed in.");
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setVerifying(false);
-    }
-  }
+  const title =
+    mode === "signup"
+      ? "Sign Up"
+      : mode === "forgot"
+        ? "Reset Password"
+        : "Log In";
+  const needsEmail = mode === "signup" || mode === "forgot";
+  const submitDisabled =
+    !username ||
+    submitting ||
+    (mode !== "forgot" && !password) ||
+    (needsEmail && !email) ||
+    (mode === "forgot" && !newPassword);
 
   return (
     <section className="panel auth-panel">
       <div className="panel-head">
-        <h2>Sign In</h2>
+        <h2>{title}</h2>
         <span>{session ? session.role : "choose your role"}</span>
       </div>
-      <div className="role-choice">
+      <div className="auth-tabs">
         <button
-          className={role === "kitten" ? "role-card active" : "role-card"}
-          onClick={() => setRole("kitten")}
+          className={mode === "login" ? "active" : ""}
+          onClick={() => switchMode("login")}
           type="button"
         >
-          <strong>Kitten</strong>
-          <span>Solve problems, fish, collect, trade, and rank.</span>
+          Log In
         </button>
         <button
-          className={role === "cat" ? "role-card active" : "role-card"}
-          onClick={() => setRole("cat")}
+          className={mode === "signup" ? "active" : ""}
+          onClick={() => switchMode("signup")}
           type="button"
         >
-          <strong>Cat</strong>
-          <span>Create fish ponds and coding problems for kittens.</span>
+          Sign Up
+        </button>
+        <button
+          className={mode === "forgot" ? "active" : ""}
+          onClick={() => switchMode("forgot")}
+          type="button"
+        >
+          Forgot
         </button>
       </div>
+      {mode === "signup" ? (
+        <div className="role-choice">
+          <button
+            className={role === "kitten" ? "role-card active" : "role-card"}
+            onClick={() => setRole("kitten")}
+            type="button"
+          >
+            <strong>Kitten</strong>
+            <span>Solve problems, fish, collect, trade, and rank.</span>
+          </button>
+          <button
+            className={role === "cat" ? "role-card active" : "role-card"}
+            onClick={() => setRole("cat")}
+            type="button"
+          >
+            <strong>Cat</strong>
+            <span>Create fish ponds and coding problems for kittens.</span>
+          </button>
+        </div>
+      ) : null}
       <div className="form-grid two-cols">
         <label>
           Username
@@ -193,29 +280,39 @@ function AuthPanel({ session, setSession }) {
             onChange={(event) => setUsername(event.target.value)}
           />
         </label>
-        <label>
-          Email
-          <input
-            value={email}
-            type="email"
-            onChange={(event) => setEmail(event.target.value)}
-          />
-        </label>
-        <label>
-          Verification code
-          <input
-            value={code}
-            maxLength={6}
-            onChange={(event) => setCode(event.target.value)}
-          />
-        </label>
+        {needsEmail ? (
+          <label>
+            Email
+            <input
+              value={email}
+              type="email"
+              onChange={(event) => setEmail(event.target.value)}
+            />
+          </label>
+        ) : null}
+        {mode !== "forgot" ? (
+          <label>
+            Password
+            <input
+              value={password}
+              type="password"
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </label>
+        ) : (
+          <label>
+            New password
+            <input
+              value={newPassword}
+              type="password"
+              onChange={(event) => setNewPassword(event.target.value)}
+            />
+          </label>
+        )}
       </div>
       <div className="button-row">
-        <button disabled={!email || !username || sending} onClick={sendCode}>
-          {sending ? "Sending..." : "Send Code"}
-        </button>
-        <button disabled={!email || !username || !code || verifying} onClick={verifyCode}>
-          {verifying ? "Verifying..." : "Enter CatCh"}
+        <button disabled={submitDisabled} onClick={submitAuth}>
+          {submitting ? "Working..." : title}
         </button>
       </div>
       <Status error={error} message={message} />
@@ -1340,6 +1437,7 @@ export default function App() {
   const activeLabel = tabs.find(([id]) => id === activeTab)?.[1] || tabs[0][1];
 
   function logout() {
+    request(`${AUTH_URL}/auth/logout`, { method: "POST" }).catch(() => {});
     localStorage.removeItem("catch_user_id");
     localStorage.removeItem("catch_role");
     localStorage.removeItem("catch_token");
