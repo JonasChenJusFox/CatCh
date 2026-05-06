@@ -7,19 +7,20 @@
 [![integration](https://github.com/swe-students-spring2026/5-final-fish_likes_cat-1/actions/workflows/integration.yml/badge.svg)](https://github.com/swe-students-spring2026/5-final-fish_likes_cat-1/actions/workflows/integration.yml)
 [![frontend-app](https://github.com/swe-students-spring2026/5-final-fish_likes_cat-1/actions/workflows/frontend-app.yml/badge.svg)](https://github.com/swe-students-spring2026/5-final-fish_likes_cat-1/actions/workflows/frontend-app.yml)
 
-CatCh is a gamified programming practice platform. Students (kittens) solve coding problems to earn fishing chances, then cast fishing chances to catch fish from a pond. Common fish sell directly for tokens; rarer fish go on the marketplace, fill the medal wall, and drive the leaderboards. Teachers (cats) create public or private ponds and write the coding problems inside them, earning fishing chances per problem authored.
+CatCh is a gamified programming practice platform. Students (kittens) solve coding problems to earn fishing chances, then use those chances to catch fish from a pond. Common fish sell directly for tokens; uncommon and rarer fish can be listed on the marketplace, displayed in the aquarium, and used for collection leaderboards. Teachers (cats) create public or private ponds and manage coding problems without participating in the token economy.
 
 ## Live Deployment
 
-Deployed on Digital Ocean: **https://catch-a8gtz.ondigitalocean.app**
+Deployed on Digital Ocean: **[CatCh live app](https://catch-a8gtz.ondigitalocean.app)**
 
 | Service | URL |
 |---|---|
-| Web app | https://catch-a8gtz.ondigitalocean.app |
-| game-service | [https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-game-service](https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-game-service) |
-| grader-service | [https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-grader-service](https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-grader-service) |
-| auth-service | [https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-auth-service](https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-auth-service) |
-| teacher-service | [https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-teacher-service](https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-teacher-service) |
+| Web app | [CatCh live app](https://catch-a8gtz.ondigitalocean.app) |
+| game-service | [game-service API](https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-game-servi) |
+| grader-service | [grader-service API](https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-grader-ser) |
+| auth-service | [auth-service API](https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-auth-servi) |
+| teacher-service | [teacher-service API](https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-teacher-se) |
+| integration | [integration API](https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-integration) |
 
 ## Team
 
@@ -40,19 +41,19 @@ Deployed on Digital Ocean: **https://catch-a8gtz.ondigitalocean.app**
 | `auth-service` | Email verification, role-aware sign-in, JWT issuance | FastAPI, MongoDB | 8002 | [jonaschenjusfox/catch-auth-service](https://hub.docker.com/r/jonaschenjusfox/catch-auth-service) |
 | `teacher-service` | Cat-side pond and problem CRUD | FastAPI, MongoDB | 8003 | [jonaschenjusfox/catch-teacher-service](https://hub.docker.com/r/jonaschenjusfox/catch-teacher-service) |
 | `integration` | Product-rule and integration health endpoints | FastAPI | 8004 | [jonaschenjusfox/catch-integration](https://hub.docker.com/r/jonaschenjusfox/catch-integration) |
-| `frontend/app` | React web client served behind Nginx | React, Vite | 3000 | [jonaschenjusfox/catch-frontend](https://hub.docker.com/r/jonaschenjusfox/catch-frontend) |
+| `frontend/app` | React web client served behind Nginx | React, Vite | 3000 | [jonaschenjusfox/catch-web-app](https://hub.docker.com/r/jonaschenjusfox/catch-web-app) |
 | `mongo` | Shared database | MongoDB 7 | 27017 | [mongo](https://hub.docker.com/_/mongo) |
 
 ## Run
 
 ```bash
-git clone https://github.com/swe-students-spring2026/5-final-fish_likes_cat-1.git
+git clone git@github.com:swe-students-spring2026/5-final-fish_likes_cat-1.git
 cd 5-final-fish_likes_cat-1
 cp .env.example .env
 docker compose up --build
 ```
 
-Open http://localhost:3000.
+Open the [local web app](http://localhost:3000).
 
 To stop:
 
@@ -87,7 +88,7 @@ Copy `.env.example` to `.env` before the first run. The committed `.env.example`
 
 Committed at `data/`:
 
-- `judgeable_problems.json` — 79 coding problems with starter code, hidden tests, and reference solutions
+- `judgeable_problems.json` — 74 coding problems with starter code, hidden tests, and reference solutions
 - `fish_species.json` — 50 fish species with rarity, prices, sell values
 - `fish_images/` — fish PNGs served at `/fish_images/<species_id>.png`
 
@@ -113,8 +114,11 @@ Frontend:
 ```bash
 cd frontend/app
 npm install
-npm run dev    # http://localhost:5173
+npm run dev    # local Vite dev server
 ```
+
+The [local Vite dev server](http://localhost:5173) is only for development. The
+deployed web app runs at [CatCh live app](https://catch-a8gtz.ondigitalocean.app).
 
 ## Testing
 
