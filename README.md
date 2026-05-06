@@ -44,7 +44,7 @@ Deployed on Digital Ocean: **[CatCh live app](https://catch-a8gtz.ondigitalocean
 | `frontend/app` | React web client served behind Nginx | React, Vite | 3000 | [jonaschenjusfox/catch-web-app](https://hub.docker.com/r/jonaschenjusfox/catch-web-app) |
 | `mongo` | Shared database | MongoDB 7 | 27017 | [mongo](https://hub.docker.com/_/mongo) |
 
-## Run
+## Locally-run
 
 ```bash
 git clone git@github.com:swe-students-spring2026/5-final-fish_likes_cat-1.git
