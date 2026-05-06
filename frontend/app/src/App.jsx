@@ -1,11 +1,48 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-const GAME_URL = import.meta.env.VITE_GAME_SERVICE_URL || "http://localhost:8000";
-const AUTH_URL = import.meta.env.VITE_AUTH_SERVICE_URL || "http://localhost:8002";
-const TEACHER_URL =
-  import.meta.env.VITE_TEACHER_SERVICE_URL || "http://localhost:8003";
-const INTEGRATION_URL =
-  import.meta.env.VITE_INTEGRATION_SERVICE_URL || "http://localhost:8004";
+const DO_COMPONENT_PATHS = {
+  auth: "jonaschenjusfox-catch-auth-servi",
+  game: "jonaschenjusfox-catch-game-servi",
+  teacher: "jonaschenjusfox-catch-teacher-se",
+  integration: "jonaschenjusfox-catch-integration",
+};
+
+function cleanUrl(url) {
+  return url ? url.replace(/\/+$/, "") : "";
+}
+
+function serviceUrl(envUrl, localUrl, componentPath) {
+  const configuredUrl = cleanUrl(envUrl);
+  if (configuredUrl) return configuredUrl;
+
+  const isLocalHost = ["localhost", "127.0.0.1"].includes(
+    window.location.hostname,
+  );
+  if (isLocalHost) return localUrl;
+
+  return `${window.location.origin}/${componentPath}`;
+}
+
+const GAME_URL = serviceUrl(
+  import.meta.env.VITE_GAME_SERVICE_URL,
+  "http://localhost:8000",
+  DO_COMPONENT_PATHS.game,
+);
+const AUTH_URL = serviceUrl(
+  import.meta.env.VITE_AUTH_SERVICE_URL,
+  "http://localhost:8002",
+  DO_COMPONENT_PATHS.auth,
+);
+const TEACHER_URL = serviceUrl(
+  import.meta.env.VITE_TEACHER_SERVICE_URL,
+  "http://localhost:8003",
+  DO_COMPONENT_PATHS.teacher,
+);
+const INTEGRATION_URL = serviceUrl(
+  import.meta.env.VITE_INTEGRATION_SERVICE_URL,
+  "http://localhost:8004",
+  DO_COMPONENT_PATHS.integration,
+);
 
 const kittenTabs = [
   ["quiz", "Quiz"],
