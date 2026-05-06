@@ -47,7 +47,7 @@ Deployed on Digital Ocean: **[CatCh live app](https://catch-a8gtz.ondigitalocean
 ## Locally-run
 
 ```bash
-git clone git@github.com:swe-students-spring2026/5-final-fish_likes_cat-1.git
+git clone https://github.com/swe-students-spring2026/5-final-fish_likes_cat-1.git
 cd 5-final-fish_likes_cat-1
 cp .env.example .env
 ```
