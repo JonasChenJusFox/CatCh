@@ -72,6 +72,25 @@ button:disabled {
   box-shadow: 0 24px 70px rgba(16, 47, 53, 0.14);
 }
 
+.auth-tabs {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 16px;
+}
+
+.auth-tabs button {
+  background: #f6fbfc;
+  border: 1px solid #d4e3e5;
+  color: #15202b;
+}
+
+.auth-tabs button.active {
+  background: #136f63;
+  border-color: #136f63;
+  color: white;
+}
+
 .role-choice {
   display: grid;
   gap: 12px;

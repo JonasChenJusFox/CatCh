@@ -73,7 +73,7 @@ async def service_map():
         ServiceEndpoint(
             service="auth-service",
             base_url=AUTH_SERVICE_URL,
-            owns=["email verification", "JWT", "cat/kitten role claims"],
+            owns=["username/password auth", "JWT", "cat/kitten role claims"],
         ),
         ServiceEndpoint(
             service="teacher-service",

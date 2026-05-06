@@ -308,5 +308,5 @@ async def invite_kittens(pond_id: str, payload: InviteKittensRequest):
         "room_code": payload.room_code,
         "student_emails": payload.student_emails,
         "email_service": AUTH_SERVICE_URL,
-        "message": "Send this room code to kittens through email verification/invitation flow.",
+        "message": "Send this room code to kittens through the invitation flow.",
     }
