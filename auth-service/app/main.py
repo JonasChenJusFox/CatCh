@@ -162,6 +162,14 @@ def utc_now() -> datetime:
     return datetime.now(timezone.utc)
 
 
+def as_utc(value: datetime) -> datetime:
+    """Normalize MongoDB datetimes to aware UTC datetimes."""
+
+    if value.tzinfo is None:
+        return value.replace(tzinfo=timezone.utc)
+    return value.astimezone(timezone.utc)
+
+
 def normalize_username(username: str, email: str) -> str:
     """Create a display-safe username from input or the email prefix."""
 
@@ -447,7 +455,7 @@ def verify_email_endpoint(request: VerifyEmailRequest):
             detail="No verification code found for this email",
         )
 
-    if utc_now() > stored["expires_at"]:
+    if utc_now() > as_utc(stored["expires_at"]):
         delete_verification_code(email)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
