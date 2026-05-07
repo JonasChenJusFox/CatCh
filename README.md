@@ -20,7 +20,6 @@ Deployed on Digital Ocean: **[CatCh live app](https://catch-a8gtz.ondigitalocean
 | grader-service | [grader-service API](https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-grader-ser) |
 | auth-service | [auth-service API](https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-auth-servi) |
 | teacher-service | [teacher-service API](https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-teacher-se) |
-| integration | [integration API](https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-integration) |
 
 ## Team
 
@@ -40,7 +39,6 @@ Deployed on Digital Ocean: **[CatCh live app](https://catch-a8gtz.ondigitalocean
 | `grader-service` | Sandboxed Python execution and unit-test grading | FastAPI | 8001 | [jonaschenjusfox/catch-grader-service](https://hub.docker.com/r/jonaschenjusfox/catch-grader-service) |
 | `auth-service` | Username/password sign-up, login, password reset, logout, JWT issuance | FastAPI, MongoDB | 8002 | [jonaschenjusfox/catch-auth-service](https://hub.docker.com/r/jonaschenjusfox/catch-auth-service) |
 | `teacher-service` | Cat-side pond and problem CRUD | FastAPI, MongoDB | 8003 | [jonaschenjusfox/catch-teacher-service](https://hub.docker.com/r/jonaschenjusfox/catch-teacher-service) |
-| `integration` | Product-rule and integration health endpoints | FastAPI | 8004 | [jonaschenjusfox/catch-integration](https://hub.docker.com/r/jonaschenjusfox/catch-integration) |
 | `frontend/app` | React web client served behind Nginx | React, Vite | 3000 | [jonaschenjusfox/catch-web-app](https://hub.docker.com/r/jonaschenjusfox/catch-web-app) |
 | `mongo` | Shared database | MongoDB 7 | 27017 | [mongo](https://hub.docker.com/_/mongo) |
 
@@ -61,7 +59,6 @@ URLs should point at `localhost` services:
 VITE_GAME_SERVICE_URL=http://localhost:8000
 VITE_AUTH_SERVICE_URL=http://localhost:8002
 VITE_TEACHER_SERVICE_URL=http://localhost:8003
-VITE_INTEGRATION_SERVICE_URL=http://localhost:8004
 ```
 
 Then build and run the full app:
