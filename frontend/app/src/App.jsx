@@ -2,10 +2,10 @@ import React, { useEffect, useMemo, useState } from "react";
 import catchLogo from "./assets/catch.png";
 
 const DO_COMPONENT_PATHS = {
-  auth: "jonaschenjusfox-catch-auth-servi",
-  game: "jonaschenjusfox-catch-game-servi",
-  teacher: "jonaschenjusfox-catch-teacher-se",
-  integration: "jonaschenjusfox-catch-integration",
+  auth: "catch-auth-service",
+  game: "catch-game-service",
+  teacher: "catch-teacher-service",
+  integration: "catch-integration",
 };
 
 function cleanUrl(url) {
