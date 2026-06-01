@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import catchLogo from "./assets/catch.png";
 
 const DO_COMPONENT_PATHS = {
   auth: "jonaschenjusfox-catch-auth-servi",
@@ -147,6 +148,7 @@ function AuthPanel({ session, setSession }) {
   const [role, setRole] = useState("kitten");
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -165,7 +167,30 @@ function AuthPanel({ session, setSession }) {
     setMessage("");
     setPassword("");
     setNewPassword("");
+    setVerificationCode("");
     setMode(nextMode);
+  }
+
+  async function requestEmailCode() {
+    setError("");
+    setMessage("");
+    setSubmitting(true);
+    try {
+      const data = await request(`${AUTH_URL}/auth/verification-code/request`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, role }),
+      });
+      setMessage(
+        data.debug_code
+          ? `Local demo code: ${data.debug_code}`
+          : "Verification code sent. Check your email.",
+      );
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   async function submitAuth() {
@@ -173,6 +198,21 @@ function AuthPanel({ session, setSession }) {
     setMessage("");
     setSubmitting(true);
     try {
+      if (mode === "email-code") {
+        const data = await request(`${AUTH_URL}/auth/verification-code/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            code: verificationCode,
+            role,
+          }),
+        });
+        storeSession(data);
+        setMessage("Signed in with email code.");
+        return;
+      }
+
       if (mode === "forgot") {
         await request(`${AUTH_URL}/auth/forgot-password`, {
           method: "POST",
@@ -212,16 +252,23 @@ function AuthPanel({ session, setSession }) {
   const title =
     mode === "signup"
       ? "Sign Up"
+      : mode === "email-code"
+        ? "Email Code"
       : mode === "forgot"
         ? "Reset Password"
         : "Log In";
-  const needsEmail = mode === "signup" || mode === "forgot";
+  const submitLabel = mode === "email-code" ? "Log In" : title;
+  const needsEmail =
+    mode === "signup" || mode === "forgot" || mode === "email-code";
+  const needsUsername = mode !== "email-code";
   const submitDisabled =
-    !username ||
     submitting ||
-    (mode !== "forgot" && !password) ||
+    (needsUsername && !username) ||
+    (mode !== "forgot" && mode !== "email-code" && !password) ||
     (needsEmail && !email) ||
-    (mode === "forgot" && !newPassword);
+    (mode === "forgot" && !newPassword) ||
+    (mode === "email-code" && !verificationCode);
+  const requestCodeDisabled = submitting || !email;
 
   return (
     <section className="panel auth-panel">
@@ -245,6 +292,13 @@ function AuthPanel({ session, setSession }) {
           Sign Up
         </button>
         <button
+          className={mode === "email-code" ? "active" : ""}
+          onClick={() => switchMode("email-code")}
+          type="button"
+        >
+          Email Code
+        </button>
+        <button
           className={mode === "forgot" ? "active" : ""}
           onClick={() => switchMode("forgot")}
           type="button"
@@ -252,7 +306,7 @@ function AuthPanel({ session, setSession }) {
           Forgot
         </button>
       </div>
-      {mode === "signup" ? (
+      {mode === "signup" || mode === "email-code" ? (
         <div className="role-choice">
           <button
             className={role === "kitten" ? "role-card active" : "role-card"}
@@ -273,13 +327,15 @@ function AuthPanel({ session, setSession }) {
         </div>
       ) : null}
       <div className="form-grid two-cols">
-        <label>
-          Username
-          <input
-            value={username}
-            onChange={(event) => setUsername(event.target.value)}
-          />
-        </label>
+        {needsUsername ? (
+          <label>
+            Username
+            <input
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+            />
+          </label>
+        ) : null}
         {needsEmail ? (
           <label>
             Email
@@ -290,7 +346,16 @@ function AuthPanel({ session, setSession }) {
             />
           </label>
         ) : null}
-        {mode !== "forgot" ? (
+        {mode === "email-code" ? (
+          <label>
+            Verification code
+            <input
+              value={verificationCode}
+              inputMode="numeric"
+              onChange={(event) => setVerificationCode(event.target.value)}
+            />
+          </label>
+        ) : mode !== "forgot" ? (
           <label>
             Password
             <input
@@ -311,8 +376,18 @@ function AuthPanel({ session, setSession }) {
         )}
       </div>
       <div className="button-row">
+        {mode === "email-code" ? (
+          <button
+            className="secondary-button"
+            disabled={requestCodeDisabled}
+            onClick={requestEmailCode}
+            type="button"
+          >
+            Send Code
+          </button>
+        ) : null}
         <button disabled={submitDisabled} onClick={submitAuth}>
-          {submitting ? "Working..." : title}
+          {submitting ? "Working..." : submitLabel}
         </button>
       </div>
       <Status error={error} message={message} />
@@ -324,7 +399,7 @@ function LoginScreen({ session, setSession }) {
   return (
     <main className="login-screen">
       <section className="login-copy">
-        <strong>CatCh</strong>
+        <img className="hero-logo" src={catchLogo} alt="CatCh" />
         <h1>Code, fish, and learn.</h1>
         <p>
           Kittens play the coding game economy. Cats create ponds and problems
@@ -1508,7 +1583,7 @@ export default function App() {
     <main className="app-shell">
       <aside className="nav">
         <div className="brand">
-          <strong>CatCh</strong>
+          <img className="nav-logo" src={catchLogo} alt="CatCh" />
           <span>{role === "cat" ? "Cat teacher" : "Kitten programmer"}</span>
           <span>{session.username || userId}</span>
         </div>

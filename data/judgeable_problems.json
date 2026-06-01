@@ -1,6 +1,6 @@
 [
   {
-    "id": "leetcode-1",
+    "id": "problem-1",
     "external_id": "1",
     "slug": "two-sum",
     "title": "Two Sum",
@@ -15,9 +15,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/two-sum",
-    "solution_url": "https://leetcode.com/articles/two-sum",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 46.7,
     "topics": [
       "Array",
@@ -47,7 +47,7 @@
     ]
   },
   {
-    "id": "leetcode-9",
+    "id": "problem-9",
     "external_id": "9",
     "slug": "palindrome-number",
     "title": "Palindrome Number",
@@ -62,9 +62,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/palindrome-number",
-    "solution_url": "https://leetcode.com/articles/palindrome-number",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 50.0,
     "topics": [
       "Math"
@@ -79,7 +79,7 @@
     ]
   },
   {
-    "id": "leetcode-20",
+    "id": "problem-20",
     "external_id": "20",
     "slug": "valid-parentheses",
     "title": "Valid Parentheses",
@@ -94,9 +94,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/valid-parentheses",
-    "solution_url": "https://leetcode.com/articles/valid-parentheses",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 40.0,
     "topics": [
       "String",
@@ -126,7 +126,7 @@
     ]
   },
   {
-    "id": "leetcode-121",
+    "id": "problem-121",
     "external_id": "121",
     "slug": "best-time-to-buy-and-sell-stock",
     "title": "Best Time to Buy and Sell Stock",
@@ -141,9 +141,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock",
-    "solution_url": "https://leetcode.com/articles/best-time-to-buy-and-sell-stock",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 51.8,
     "topics": [
       "Array",
@@ -173,7 +173,7 @@
     ]
   },
   {
-    "id": "leetcode-14",
+    "id": "problem-14",
     "external_id": "14",
     "slug": "longest-common-prefix",
     "title": "Longest Common Prefix",
@@ -188,9 +188,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/longest-common-prefix",
-    "solution_url": "https://leetcode.com/articles/longest-common-prefix",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 36.2,
     "topics": [
       "String"
@@ -207,7 +207,7 @@
     ]
   },
   {
-    "id": "leetcode-26",
+    "id": "problem-26",
     "external_id": "26",
     "slug": "remove-duplicates-from-sorted-array",
     "title": "Remove Duplicates from Sorted Array",
@@ -222,9 +222,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/remove-duplicates-from-sorted-array",
-    "solution_url": "https://leetcode.com/articles/remove-duplicates-from-sorted-array",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 46.8,
     "topics": [
       "Array",
@@ -238,7 +238,7 @@
     ]
   },
   {
-    "id": "leetcode-53",
+    "id": "problem-53",
     "external_id": "53",
     "slug": "maximum-subarray",
     "title": "Maximum Subarray",
@@ -253,9 +253,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/maximum-subarray",
-    "solution_url": "https://leetcode.com/articles/maximum-subarray",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 47.9,
     "topics": [
       "Array",
@@ -281,7 +281,7 @@
     ]
   },
   {
-    "id": "leetcode-66",
+    "id": "problem-66",
     "external_id": "66",
     "slug": "plus-one",
     "title": "Plus One",
@@ -296,9 +296,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/plus-one",
-    "solution_url": "https://leetcode.com/articles/plus-one",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 42.2,
     "topics": [
       "Array"
@@ -313,7 +313,7 @@
     ]
   },
   {
-    "id": "leetcode-70",
+    "id": "problem-70",
     "external_id": "70",
     "slug": "climbing-stairs",
     "title": "Climbing Stairs",
@@ -328,9 +328,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/climbing-stairs",
-    "solution_url": "https://leetcode.com/articles/climbing-stairs",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 48.8,
     "topics": [
       "Dynamic Programming"
@@ -347,7 +347,7 @@
     ]
   },
   {
-    "id": "leetcode-3",
+    "id": "problem-3",
     "external_id": "3",
     "slug": "longest-substring-without-repeating-characters",
     "title": "Longest Substring Without Repeating Characters",
@@ -362,9 +362,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/longest-substring-without-repeating-characters",
-    "solution_url": "https://leetcode.com/articles/longest-substring-without-repeating-characters",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 31.5,
     "topics": [
       "Hash Table",
@@ -396,7 +396,7 @@
     ]
   },
   {
-    "id": "leetcode-49",
+    "id": "problem-49",
     "external_id": "49",
     "slug": "group-anagrams",
     "title": "Group Anagrams",
@@ -411,9 +411,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/group-anagrams",
-    "solution_url": "https://leetcode.com/articles/group-anagrams",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 59.7,
     "topics": [
       "Hash Table",
@@ -443,7 +443,7 @@
     ]
   },
   {
-    "id": "leetcode-56",
+    "id": "problem-56",
     "external_id": "56",
     "slug": "merge-intervals",
     "title": "Merge Intervals",
@@ -458,9 +458,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/merge-intervals",
-    "solution_url": "https://leetcode.com/articles/merge-intervals",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 41.4,
     "topics": [
       "Array",
@@ -490,7 +490,7 @@
     ]
   },
   {
-    "id": "leetcode-75",
+    "id": "problem-75",
     "external_id": "75",
     "slug": "sort-colors",
     "title": "Sort Colors",
@@ -505,9 +505,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/sort-colors",
-    "solution_url": "https://leetcode.com/articles/sort-colors",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 49.8,
     "topics": [
       "Array",
@@ -526,7 +526,7 @@
     ]
   },
   {
-    "id": "leetcode-78",
+    "id": "problem-78",
     "external_id": "78",
     "slug": "subsets",
     "title": "Subsets",
@@ -541,9 +541,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/subsets",
-    "solution_url": "https://leetcode.com/articles/subsets",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 65.6,
     "topics": [
       "Array",
@@ -561,7 +561,7 @@
     ]
   },
   {
-    "id": "leetcode-7",
+    "id": "problem-7",
     "external_id": "7",
     "slug": "reverse-integer",
     "title": "Reverse Integer",
@@ -576,9 +576,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/reverse-integer",
-    "solution_url": "https://leetcode.com/articles/reverse-integer",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 25.9,
     "topics": [
       "Math"
@@ -596,7 +596,7 @@
     ]
   },
   {
-    "id": "leetcode-13",
+    "id": "problem-13",
     "external_id": "13",
     "slug": "roman-to-integer",
     "title": "Roman to Integer",
@@ -611,9 +611,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/roman-to-integer",
-    "solution_url": "https://leetcode.com/articles/roman-to-integer",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 57.0,
     "topics": [
       "Math",
@@ -635,7 +635,7 @@
     ]
   },
   {
-    "id": "leetcode-27",
+    "id": "problem-27",
     "external_id": "27",
     "slug": "remove-element",
     "title": "Remove Element",
@@ -650,9 +650,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/remove-element",
-    "solution_url": "https://leetcode.com/articles/remove-element",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 49.5,
     "topics": [
       "Array",
@@ -665,14 +665,14 @@
     ]
   },
   {
-    "id": "leetcode-28",
+    "id": "problem-28",
     "external_id": "28",
     "slug": "implement-strstr",
     "title": "Implement strStr()",
     "function_name": "str_str",
     "instructions": "Implement strStr().\n\nReturn the index of the first occurrence of needle in haystack, or `-1` if `needle` is not part of `haystack`.\n\nClarification:\nWhat should we return when `needle` is an empty string? This is a great question to ask during an interview.\n\nFor the purpose of this problem, we will return 0 when `needle` is an empty string. This is consistent to C's strstr() and Java's indexOf().\n\n\nExample 1:\nInput: haystack = \"hello\", needle = \"ll\"\nOutput: 2\n\nExample 2:\nInput: haystack = \"aaaaa\", needle = \"bba\"\nOutput: -1\n\nExample 3:\nInput: haystack = \"\", needle = \"\"\nOutput: 0\n\nConstraints:\n`0 <= haystack.length, needle.length <= 5 * 104`\n`haystack` and `needle` consist of only lower-case English characters.",
     "starter_code": "def str_str(haystack, needle):\n    pass\n",
-    "test_code": "import unittest\n\n\nclass StrStrTest(unittest.TestCase):\n    def test_match_in_middle(self):\n        self.assertEqual(str_str(\"sadbutsad\", \"sad\"), 0)\n\n    def test_no_match(self):\n        self.assertEqual(str_str(\"leetcode\", \"leeto\"), -1)\n\n    def test_match_at_end(self):\n        self.assertEqual(str_str(\"hello\", \"llo\"), 2)\n\n    def test_empty_needle(self):\n        self.assertEqual(str_str(\"abc\", \"\"), 0)\n\n    def test_needle_longer_than_haystack(self):\n        self.assertEqual(str_str(\"a\", \"abc\"), -1)\n",
+    "test_code": "import unittest\n\n\nclass StrStrTest(unittest.TestCase):\n    def test_match_in_middle(self):\n        self.assertEqual(str_str(\"sadbutsad\", \"sad\"), 0)\n\n    def test_no_match(self):\n        self.assertEqual(str_str(\"codecatch\", \"codecow\"), -1)\n\n    def test_match_at_end(self):\n        self.assertEqual(str_str(\"hello\", \"llo\"), 2)\n\n    def test_empty_needle(self):\n        self.assertEqual(str_str(\"abc\", \"\"), 0)\n\n    def test_needle_longer_than_haystack(self):\n        self.assertEqual(str_str(\"a\", \"abc\"), -1)\n",
     "solution_code": "def str_str(haystack, needle):\n    if needle == '':\n        return 0\n    n, m = len(haystack), len(needle)\n    for i in range(n - m + 1):\n        if haystack[i:i + m] == needle:\n            return i\n    return -1\n",
     "solution_explanation": "Slide a window of length len(needle) across haystack and return the first matching start index, or -1.",
     "difficulty": "easy",
@@ -680,9 +680,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/implement-strstr",
-    "solution_url": "https://leetcode.com/articles/implement-strstr",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 35.3,
     "topics": [
       "Two Pointers",
@@ -695,7 +695,7 @@
     ]
   },
   {
-    "id": "leetcode-35",
+    "id": "problem-35",
     "external_id": "35",
     "slug": "search-insert-position",
     "title": "Search Insert Position",
@@ -710,9 +710,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/search-insert-position",
-    "solution_url": "https://leetcode.com/articles/search-insert-position",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 42.9,
     "topics": [
       "Array",
@@ -724,7 +724,7 @@
     ]
   },
   {
-    "id": "leetcode-58",
+    "id": "problem-58",
     "external_id": "58",
     "slug": "length-of-last-word",
     "title": "Length of Last Word",
@@ -739,9 +739,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/length-of-last-word",
-    "solution_url": "https://leetcode.com/articles/length-of-last-word",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 33.5,
     "topics": [
       "String"
@@ -752,7 +752,7 @@
     ]
   },
   {
-    "id": "leetcode-67",
+    "id": "problem-67",
     "external_id": "67",
     "slug": "add-binary",
     "title": "Add Binary",
@@ -767,9 +767,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/add-binary",
-    "solution_url": "https://leetcode.com/articles/add-binary",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 47.3,
     "topics": [
       "Math",
@@ -782,7 +782,7 @@
     ]
   },
   {
-    "id": "leetcode-69",
+    "id": "problem-69",
     "external_id": "69",
     "slug": "sqrt-x",
     "title": "Sqrt(x)",
@@ -797,9 +797,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/sqrtx",
-    "solution_url": "https://leetcode.com/articles/sqrtx",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 35.4,
     "topics": [
       "Math",
@@ -815,7 +815,7 @@
     ]
   },
   {
-    "id": "leetcode-12",
+    "id": "problem-12",
     "external_id": "12",
     "slug": "integer-to-roman",
     "title": "Integer to Roman",
@@ -830,9 +830,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/integer-to-roman",
-    "solution_url": "https://leetcode.com/articles/integer-to-roman",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 57.1,
     "topics": [
       "Math",
@@ -849,7 +849,7 @@
     ]
   },
   {
-    "id": "leetcode-88",
+    "id": "problem-88",
     "external_id": "88",
     "slug": "merge-sorted-array",
     "title": "Merge Sorted Array",
@@ -864,9 +864,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/merge-sorted-array",
-    "solution_url": "https://leetcode.com/articles/merge-sorted-arrays",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 40.9,
     "topics": [
       "Array",
@@ -888,7 +888,7 @@
     ]
   },
   {
-    "id": "leetcode-5",
+    "id": "problem-5",
     "external_id": "5",
     "slug": "longest-palindromic-substring",
     "title": "Longest Palindromic Substring",
@@ -903,9 +903,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/longest-palindromic-substring",
-    "solution_url": "https://leetcode.com/articles/longest-palindromic-substring",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 30.6,
     "topics": [
       "String",
@@ -926,7 +926,7 @@
     ]
   },
   {
-    "id": "leetcode-11",
+    "id": "problem-11",
     "external_id": "11",
     "slug": "container-with-most-water",
     "title": "Container With Most Water",
@@ -941,9 +941,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/container-with-most-water",
-    "solution_url": "https://leetcode.com/articles/container-with-most-water",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 52.9,
     "topics": [
       "Array",
@@ -960,7 +960,7 @@
     ]
   },
   {
-    "id": "leetcode-15",
+    "id": "problem-15",
     "external_id": "15",
     "slug": "3sum",
     "title": "3Sum",
@@ -975,9 +975,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/3sum",
-    "solution_url": "https://leetcode.com/articles/3sum",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 28.3,
     "topics": [
       "Array",
@@ -999,7 +999,7 @@
     ]
   },
   {
-    "id": "leetcode-22",
+    "id": "problem-22",
     "external_id": "22",
     "slug": "generate-parentheses",
     "title": "Generate Parentheses",
@@ -1014,9 +1014,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/generate-parentheses",
-    "solution_url": "https://leetcode.com/articles/generate-parentheses",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 65.7,
     "topics": [
       "String",
@@ -1037,7 +1037,7 @@
     ]
   },
   {
-    "id": "leetcode-33",
+    "id": "problem-33",
     "external_id": "33",
     "slug": "search-in-rotated-sorted-array",
     "title": "Search in Rotated Sorted Array",
@@ -1052,9 +1052,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/search-in-rotated-sorted-array",
-    "solution_url": "https://leetcode.com/articles/search-in-rotated-sorted-array",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 36.1,
     "topics": [
       "Array",
@@ -1081,7 +1081,7 @@
     ]
   },
   {
-    "id": "leetcode-39",
+    "id": "problem-39",
     "external_id": "39",
     "slug": "combination-sum",
     "title": "Combination Sum",
@@ -1096,9 +1096,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/combination-sum",
-    "solution_url": "https://leetcode.com/articles/combination-sum",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 59.7,
     "topics": [
       "Array",
@@ -1119,7 +1119,7 @@
     ]
   },
   {
-    "id": "leetcode-46",
+    "id": "problem-46",
     "external_id": "46",
     "slug": "permutations",
     "title": "Permutations",
@@ -1134,9 +1134,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/permutations",
-    "solution_url": "https://leetcode.com/articles/permutations",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 67.1,
     "topics": [
       "Backtracking"
@@ -1154,7 +1154,7 @@
     ]
   },
   {
-    "id": "leetcode-48",
+    "id": "problem-48",
     "external_id": "48",
     "slug": "rotate-image",
     "title": "Rotate Image",
@@ -1169,9 +1169,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/rotate-image",
-    "solution_url": "https://leetcode.com/articles/rotate-image",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 60.5,
     "topics": [
       "Array"
@@ -1193,7 +1193,7 @@
     ]
   },
   {
-    "id": "leetcode-55",
+    "id": "problem-55",
     "external_id": "55",
     "slug": "jump-game",
     "title": "Jump Game",
@@ -1208,9 +1208,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/jump-game",
-    "solution_url": "https://leetcode.com/articles/jump-game",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 35.2,
     "topics": [
       "Array",
@@ -1223,7 +1223,7 @@
     ]
   },
   {
-    "id": "leetcode-62",
+    "id": "problem-62",
     "external_id": "62",
     "slug": "unique-paths",
     "title": "Unique Paths",
@@ -1238,9 +1238,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/unique-paths",
-    "solution_url": "https://leetcode.com/articles/unique-paths",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 56.3,
     "topics": [
       "Array",
@@ -1259,7 +1259,7 @@
     ]
   },
   {
-    "id": "leetcode-6",
+    "id": "problem-6",
     "external_id": "6",
     "slug": "zigzag-conversion",
     "title": "ZigZag Conversion",
@@ -1274,9 +1274,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/zigzag-conversion",
-    "solution_url": "https://leetcode.com/articles/zigzag-conversion",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 38.2,
     "topics": [
       "String"
@@ -1286,7 +1286,7 @@
     ]
   },
   {
-    "id": "leetcode-8",
+    "id": "problem-8",
     "external_id": "8",
     "slug": "string-to-integer-atoi",
     "title": "String to Integer (atoi)",
@@ -1301,9 +1301,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/string-to-integer-atoi",
-    "solution_url": "https://leetcode.com/articles/string-to-integer",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 15.7,
     "topics": [
       "Math",
@@ -1322,7 +1322,7 @@
     ]
   },
   {
-    "id": "leetcode-16",
+    "id": "problem-16",
     "external_id": "16",
     "slug": "3sum-closest",
     "title": "3Sum Closest",
@@ -1337,9 +1337,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/3sum-closest",
-    "solution_url": "https://leetcode.com/articles/3sum-closest",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 46.3,
     "topics": [
       "Array",
@@ -1354,7 +1354,7 @@
     ]
   },
   {
-    "id": "leetcode-17",
+    "id": "problem-17",
     "external_id": "17",
     "slug": "letter-combinations-of-a-phone-number",
     "title": "Letter Combinations of a Phone Number",
@@ -1369,9 +1369,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/letter-combinations-of-a-phone-number",
-    "solution_url": "https://leetcode.com/articles/letter-combinations-of-a-phone-number",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 49.5,
     "topics": [
       "String",
@@ -1398,7 +1398,7 @@
     ]
   },
   {
-    "id": "leetcode-29",
+    "id": "problem-29",
     "external_id": "29",
     "slug": "divide-two-integers",
     "title": "Divide Two Integers",
@@ -1413,9 +1413,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/divide-two-integers",
-    "solution_url": "https://leetcode.com/articles/divide-integers",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 16.9,
     "topics": [
       "Math",
@@ -1427,7 +1427,7 @@
     ]
   },
   {
-    "id": "leetcode-31",
+    "id": "problem-31",
     "external_id": "31",
     "slug": "next-permutation",
     "title": "Next Permutation",
@@ -1442,9 +1442,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/next-permutation",
-    "solution_url": "https://leetcode.com/articles/next-permutation",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 33.9,
     "topics": [
       "Array"
@@ -1464,7 +1464,7 @@
     ]
   },
   {
-    "id": "leetcode-34",
+    "id": "problem-34",
     "external_id": "34",
     "slug": "find-first-and-last-position-of-element-in-sorted-array",
     "title": "Find First and Last Position of Element in Sorted Array",
@@ -1479,9 +1479,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array",
-    "solution_url": "https://leetcode.com/articles/find-first-and-last-position-of-element-in-sorted-array",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 37.5,
     "topics": [
       "Array",
@@ -1500,7 +1500,7 @@
     ]
   },
   {
-    "id": "leetcode-38",
+    "id": "problem-38",
     "external_id": "38",
     "slug": "count-and-say",
     "title": "Count and Say",
@@ -1515,9 +1515,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/count-and-say",
-    "solution_url": "https://leetcode.com/articles/count-and-say",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 46.3,
     "topics": [
       "String"
@@ -1533,7 +1533,7 @@
     ]
   },
   {
-    "id": "leetcode-40",
+    "id": "problem-40",
     "external_id": "40",
     "slug": "combination-sum-ii",
     "title": "Combination Sum II",
@@ -1548,9 +1548,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/combination-sum-ii",
-    "solution_url": "https://leetcode.com/articles/combination-sum-ii",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 50.4,
     "topics": [
       "Array",
@@ -1564,7 +1564,7 @@
     ]
   },
   {
-    "id": "leetcode-43",
+    "id": "problem-43",
     "external_id": "43",
     "slug": "multiply-strings",
     "title": "Multiply Strings",
@@ -1579,8 +1579,8 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/multiply-strings",
+    "source": "CatCh curated problem set",
+    "source_url": "",
     "solution_url": null,
     "acceptance_rate": 35.1,
     "topics": [
@@ -1599,7 +1599,7 @@
     ]
   },
   {
-    "id": "leetcode-45",
+    "id": "problem-45",
     "external_id": "45",
     "slug": "jump-game-ii",
     "title": "Jump Game II",
@@ -1614,9 +1614,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/jump-game-ii",
-    "solution_url": "https://leetcode.com/articles/jump-game-ii",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 31.7,
     "topics": [
       "Array",
@@ -1628,7 +1628,7 @@
     ]
   },
   {
-    "id": "leetcode-50",
+    "id": "problem-50",
     "external_id": "50",
     "slug": "pow-x-n",
     "title": "Pow(x, n)",
@@ -1643,9 +1643,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/powx-n",
-    "solution_url": "https://leetcode.com/articles/powx-n",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 31.0,
     "topics": [
       "Math",
@@ -1663,7 +1663,7 @@
     ]
   },
   {
-    "id": "leetcode-54",
+    "id": "problem-54",
     "external_id": "54",
     "slug": "spiral-matrix",
     "title": "Spiral Matrix",
@@ -1678,9 +1678,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/spiral-matrix",
-    "solution_url": "https://leetcode.com/articles/spiral-matrix",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 36.5,
     "topics": [
       "Array"
@@ -1699,7 +1699,7 @@
     ]
   },
   {
-    "id": "leetcode-57",
+    "id": "problem-57",
     "external_id": "57",
     "slug": "insert-interval",
     "title": "Insert Interval",
@@ -1714,9 +1714,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/insert-interval",
-    "solution_url": "https://leetcode.com/articles/insert-interval",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 35.3,
     "topics": [
       "Array",
@@ -1732,7 +1732,7 @@
     ]
   },
   {
-    "id": "leetcode-63",
+    "id": "problem-63",
     "external_id": "63",
     "slug": "unique-paths-ii",
     "title": "Unique Paths II",
@@ -1747,9 +1747,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/unique-paths-ii",
-    "solution_url": "https://leetcode.com/articles/unique-paths-ii",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 35.4,
     "topics": [
       "Array",
@@ -1763,7 +1763,7 @@
     ]
   },
   {
-    "id": "leetcode-64",
+    "id": "problem-64",
     "external_id": "64",
     "slug": "minimum-path-sum",
     "title": "Minimum Path Sum",
@@ -1778,9 +1778,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/minimum-path-sum",
-    "solution_url": "https://leetcode.com/articles/minimum-path-sum",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 56.5,
     "topics": [
       "Array",
@@ -1797,7 +1797,7 @@
     ]
   },
   {
-    "id": "leetcode-73",
+    "id": "problem-73",
     "external_id": "73",
     "slug": "set-matrix-zeroes",
     "title": "Set Matrix Zeroes",
@@ -1812,9 +1812,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/set-matrix-zeroes",
-    "solution_url": "https://leetcode.com/articles/set-matrix-zeroes",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 44.6,
     "topics": [
       "Array"
@@ -1831,7 +1831,7 @@
     ]
   },
   {
-    "id": "leetcode-74",
+    "id": "problem-74",
     "external_id": "74",
     "slug": "search-a-2d-matrix",
     "title": "Search a 2D Matrix",
@@ -1846,9 +1846,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/search-a-2d-matrix",
-    "solution_url": "https://leetcode.com/articles/search-in-2d-matrix",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 38.1,
     "topics": [
       "Array",
@@ -1863,7 +1863,7 @@
     ]
   },
   {
-    "id": "leetcode-89",
+    "id": "problem-89",
     "external_id": "89",
     "slug": "gray-code",
     "title": "Gray Code",
@@ -1878,8 +1878,8 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/gray-code",
+    "source": "CatCh curated problem set",
+    "source_url": "",
     "solution_url": null,
     "acceptance_rate": 50.7,
     "topics": [
@@ -1890,7 +1890,7 @@
     ]
   },
   {
-    "id": "leetcode-91",
+    "id": "problem-91",
     "external_id": "91",
     "slug": "decode-ways",
     "title": "Decode Ways",
@@ -1905,9 +1905,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/decode-ways",
-    "solution_url": "https://leetcode.com/articles/decode-ways",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 26.9,
     "topics": [
       "String",
@@ -1929,7 +1929,7 @@
     ]
   },
   {
-    "id": "leetcode-118",
+    "id": "problem-118",
     "external_id": "118",
     "slug": "pascals-triangle",
     "title": "Pascal's Triangle",
@@ -1944,9 +1944,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/pascals-triangle",
-    "solution_url": "https://leetcode.com/articles/pascals-triangle",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 55.4,
     "topics": [
       "Array"
@@ -1961,7 +1961,7 @@
     ]
   },
   {
-    "id": "leetcode-119",
+    "id": "problem-119",
     "external_id": "119",
     "slug": "pascals-triangle-ii",
     "title": "Pascal's Triangle II",
@@ -1976,9 +1976,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/pascals-triangle-ii",
-    "solution_url": "https://leetcode.com/articles/pascals-triangle-ii",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 52.5,
     "topics": [
       "Array"
@@ -1990,7 +1990,7 @@
     ]
   },
   {
-    "id": "leetcode-125",
+    "id": "problem-125",
     "external_id": "125",
     "slug": "valid-palindrome",
     "title": "Valid Palindrome",
@@ -2005,9 +2005,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/valid-palindrome",
-    "solution_url": "https://leetcode.com/articles/valid-palindrome",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 38.5,
     "topics": [
       "Two Pointers",
@@ -2025,7 +2025,7 @@
     ]
   },
   {
-    "id": "leetcode-136",
+    "id": "problem-136",
     "external_id": "136",
     "slug": "single-number",
     "title": "Single Number",
@@ -2040,9 +2040,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/single-number",
-    "solution_url": "https://leetcode.com/articles/single-number",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 66.7,
     "topics": [
       "Hash Table",
@@ -2056,7 +2056,7 @@
     ]
   },
   {
-    "id": "leetcode-137",
+    "id": "problem-137",
     "external_id": "137",
     "slug": "single-number-ii",
     "title": "Single Number II",
@@ -2071,9 +2071,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/single-number-ii",
-    "solution_url": "https://leetcode.com/articles/single-number-ii",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 54.1,
     "topics": [
       "Bit Manipulation"
@@ -2084,14 +2084,14 @@
     ]
   },
   {
-    "id": "leetcode-139",
+    "id": "problem-139",
     "external_id": "139",
     "slug": "word-break",
     "title": "Word Break",
     "function_name": "word_break",
-    "instructions": "Given a string `s` and a dictionary of strings `wordDict`, return `true` if `s` can be segmented into a space-separated sequence of one or more dictionary words.\n\nNote that the same word in the dictionary may be reused multiple times in the segmentation.\n\n\nExample 1:\nInput: s = \"leetcode\", wordDict = [\"leet\",\"code\"]\nOutput: true\nExplanation: Return true because \"leetcode\" can be segmented as \"leet code\".\n\n\nExample 2:\nInput: s = \"applepenapple\", wordDict = [\"apple\",\"pen\"]\nOutput: true\nExplanation: Return true because \"applepenapple\" can be segmented as \"apple pen apple\".\n\nNote that you are allowed to reuse a dictionary word.\n\n\nExample 3:\nInput: s = \"catsandog\", wordDict = [\"cats\",\"dog\",\"sand\",\"and\",\"cat\"]\nOutput: false\n\nConstraints:\n`1 <= s.length <= 300`\n`1 <= wordDict.length <= 1000`\n`1 <= wordDict[i].length <= 20`\n`s` and `wordDict[i]` consist of only lowercase English letters.\n\nAll the strings of `wordDict` are unique.",
+    "instructions": "Given a string `s` and a dictionary of strings `wordDict`, return `true` if `s` can be segmented into a space-separated sequence of one or more dictionary words.\n\nNote that the same word in the dictionary may be reused multiple times in the segmentation.\n\n\nExample 1:\nInput: s = \"codecat\", wordDict = [\"code\",\"cat\"]\nOutput: true\nExplanation: Return true because \"codecat\" can be segmented as \"code cat\".\n\n\nExample 2:\nInput: s = \"applepenapple\", wordDict = [\"apple\",\"pen\"]\nOutput: true\nExplanation: Return true because \"applepenapple\" can be segmented as \"apple pen apple\".\n\nNote that you are allowed to reuse a dictionary word.\n\n\nExample 3:\nInput: s = \"catsandog\", wordDict = [\"cats\",\"dog\",\"sand\",\"and\",\"cat\"]\nOutput: false\n\nConstraints:\n`1 <= s.length <= 300`\n`1 <= wordDict.length <= 1000`\n`1 <= wordDict[i].length <= 20`\n`s` and `wordDict[i]` consist of only lowercase English letters.\n\nAll the strings of `wordDict` are unique.",
     "starter_code": "def word_break(s, word_dict):\n    pass\n",
-    "test_code": "import unittest\n\n\nclass WordBreakTest(unittest.TestCase):\n    def test_basic(self):\n        self.assertIs(word_break(\"leetcode\", [\"leet\", \"code\"]), True)\n\n    def test_with_reuse(self):\n        self.assertIs(word_break(\"applepenapple\", [\"apple\", \"pen\"]), True)\n\n    def test_unbreakable(self):\n        self.assertIs(word_break(\"catsandog\", [\"cats\", \"dog\", \"sand\", \"and\", \"cat\"]), False)\n\n    def test_empty_string(self):\n        self.assertIs(word_break(\"\", [\"a\"]), True)\n\n    def test_single_match(self):\n        self.assertIs(word_break(\"a\", [\"a\"]), True)\n",
+    "test_code": "import unittest\n\n\nclass WordBreakTest(unittest.TestCase):\n    def test_basic(self):\n        self.assertIs(word_break(\"codecat\", [\"code\", \"cat\"]), True)\n\n    def test_with_reuse(self):\n        self.assertIs(word_break(\"applepenapple\", [\"apple\", \"pen\"]), True)\n\n    def test_unbreakable(self):\n        self.assertIs(word_break(\"catsandog\", [\"cats\", \"dog\", \"sand\", \"and\", \"cat\"]), False)\n\n    def test_empty_string(self):\n        self.assertIs(word_break(\"\", [\"a\"]), True)\n\n    def test_single_match(self):\n        self.assertIs(word_break(\"a\", [\"a\"]), True)\n",
     "solution_code": "def word_break(s, word_dict):\n    word_set = set(word_dict)\n    n = len(s)\n    dp = [False] * (n + 1)\n    dp[0] = True\n    for i in range(1, n + 1):\n        for j in range(i):\n            if dp[j] and s[j:i] in word_set:\n                dp[i] = True\n                break\n    return dp[n]\n",
     "solution_explanation": "DP: dp[i] is True when s[:i] can be segmented. For each end i, look for some split j where dp[j] is True and s[j:i] is a known word.",
     "difficulty": "medium",
@@ -2099,9 +2099,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/word-break",
-    "solution_url": "https://leetcode.com/articles/word-break",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 41.9,
     "topics": [
       "Dynamic Programming"
@@ -2119,7 +2119,7 @@
     ]
   },
   {
-    "id": "leetcode-151",
+    "id": "problem-151",
     "external_id": "151",
     "slug": "reverse-words-in-a-string",
     "title": "Reverse Words in a String",
@@ -2134,9 +2134,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/reverse-words-in-a-string",
-    "solution_url": "https://leetcode.com/articles/reverse-words-in-a-string",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 24.1,
     "topics": [
       "String"
@@ -2150,7 +2150,7 @@
     ]
   },
   {
-    "id": "leetcode-152",
+    "id": "problem-152",
     "external_id": "152",
     "slug": "maximum-product-subarray",
     "title": "Maximum Product Subarray",
@@ -2165,9 +2165,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/maximum-product-subarray",
-    "solution_url": "https://leetcode.com/articles/maximum-product-subarray",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 32.9,
     "topics": [
       "Array",
@@ -2183,7 +2183,7 @@
     ]
   },
   {
-    "id": "leetcode-153",
+    "id": "problem-153",
     "external_id": "153",
     "slug": "find-minimum-in-rotated-sorted-array",
     "title": "Find Minimum in Rotated Sorted Array",
@@ -2198,9 +2198,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array",
-    "solution_url": "https://leetcode.com/articles/find-minimum-in-rotated-sorted-array",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 46.4,
     "topics": [
       "Array",
@@ -2216,7 +2216,7 @@
     ]
   },
   {
-    "id": "leetcode-162",
+    "id": "problem-162",
     "external_id": "162",
     "slug": "find-peak-element",
     "title": "Find Peak Element",
@@ -2231,9 +2231,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/find-peak-element",
-    "solution_url": "https://leetcode.com/articles/find-peak-element",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 44.1,
     "topics": [
       "Array",
@@ -2248,7 +2248,7 @@
     ]
   },
   {
-    "id": "leetcode-169",
+    "id": "problem-169",
     "external_id": "169",
     "slug": "majority-element",
     "title": "Majority Element",
@@ -2263,9 +2263,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/majority-element",
-    "solution_url": "https://leetcode.com/articles/majority-element",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 60.2,
     "topics": [
       "Array",
@@ -2284,7 +2284,7 @@
     ]
   },
   {
-    "id": "leetcode-189",
+    "id": "problem-189",
     "external_id": "189",
     "slug": "rotate-array",
     "title": "Rotate Array",
@@ -2299,9 +2299,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/rotate-array",
-    "solution_url": "https://leetcode.com/articles/rotate-array",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 36.8,
     "topics": [
       "Array"
@@ -2313,7 +2313,7 @@
     ]
   },
   {
-    "id": "leetcode-198",
+    "id": "problem-198",
     "external_id": "198",
     "slug": "house-robber",
     "title": "House Robber",
@@ -2328,9 +2328,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/house-robber",
-    "solution_url": "https://leetcode.com/articles/house-robber",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 43.1,
     "topics": [
       "Dynamic Programming"
@@ -2346,7 +2346,7 @@
     ]
   },
   {
-    "id": "leetcode-200",
+    "id": "problem-200",
     "external_id": "200",
     "slug": "number-of-islands",
     "title": "Number of Islands",
@@ -2361,9 +2361,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/number-of-islands",
-    "solution_url": "https://leetcode.com/articles/number-of-islands",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 49.5,
     "topics": [
       "Depth-first Search",
@@ -2394,7 +2394,7 @@
     ]
   },
   {
-    "id": "leetcode-215",
+    "id": "problem-215",
     "external_id": "215",
     "slug": "kth-largest-element-in-an-array",
     "title": "Kth Largest Element in an Array",
@@ -2409,9 +2409,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/kth-largest-element-in-an-array",
-    "solution_url": "https://leetcode.com/articles/kth-largest-element-in-an-array",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 58.9,
     "topics": [
       "Divide and Conquer",
@@ -2433,7 +2433,7 @@
     ]
   },
   {
-    "id": "leetcode-217",
+    "id": "problem-217",
     "external_id": "217",
     "slug": "contains-duplicate",
     "title": "Contains Duplicate",
@@ -2448,9 +2448,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/contains-duplicate",
-    "solution_url": "https://leetcode.com/articles/contains-duplicate",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 56.9,
     "topics": [
       "Array",
@@ -2463,7 +2463,7 @@
     ]
   },
   {
-    "id": "leetcode-219",
+    "id": "problem-219",
     "external_id": "219",
     "slug": "contains-duplicate-ii",
     "title": "Contains Duplicate II",
@@ -2478,9 +2478,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/contains-duplicate-ii",
-    "solution_url": "https://leetcode.com/articles/contains-duplicate-ii",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 38.8,
     "topics": [
       "Array",
@@ -2492,7 +2492,7 @@
     ]
   },
   {
-    "id": "leetcode-238",
+    "id": "problem-238",
     "external_id": "238",
     "slug": "product-of-array-except-self",
     "title": "Product of Array Except Self",
@@ -2507,9 +2507,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/product-of-array-except-self",
-    "solution_url": "https://leetcode.com/articles/product-of-array-except-self",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 61.4,
     "topics": [
       "Array"
@@ -2530,7 +2530,7 @@
     ]
   },
   {
-    "id": "leetcode-240",
+    "id": "problem-240",
     "external_id": "240",
     "slug": "search-a-2d-matrix-ii",
     "title": "Search a 2D Matrix II",
@@ -2545,9 +2545,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/search-a-2d-matrix-ii",
-    "solution_url": "https://leetcode.com/articles/search-a-2d-matrix-ii",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 45.3,
     "topics": [
       "Binary Search",
@@ -2562,7 +2562,7 @@
     ]
   },
   {
-    "id": "leetcode-283",
+    "id": "problem-283",
     "external_id": "283",
     "slug": "move-zeroes",
     "title": "Move Zeroes",
@@ -2577,9 +2577,9 @@
     "max_attempts": 5,
     "language": "python",
     "judgeable": true,
-    "source": "LeetCode metadata with CatCh curated tests",
-    "source_url": "https://leetcode.com/problems/move-zeroes",
-    "solution_url": "https://leetcode.com/articles/move-zeroes",
+    "source": "CatCh curated problem set",
+    "source_url": "",
+    "solution_url": "",
     "acceptance_rate": 58.7,
     "topics": [
       "Array",

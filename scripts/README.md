@@ -29,5 +29,5 @@ To add fish later:
 
 The runtime coding problem dataset is committed directly at
 `data/judgeable_problems.json`. It contains the curated 74 executable
-LeetCode-style problems used by game-service. Raw LeetCode CSV files and
+coding-practice problems used by game-service. Raw problem-set CSV files and
 intermediate cleanup artifacts are intentionally not kept in the repo.

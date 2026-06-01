@@ -2,8 +2,8 @@ from unittest.mock import AsyncMock, patch
 
 import httpx
 
-EASY_PROBLEM_ID = "leetcode-1"
-MEDIUM_PROBLEM_ID = "leetcode-3"
+EASY_PROBLEM_ID = "problem-1"
+MEDIUM_PROBLEM_ID = "problem-3"
 PASSING_CODE = "def two_sum(nums, target): return [0, 1]"
 
 # --- GET /quiz/problems ---

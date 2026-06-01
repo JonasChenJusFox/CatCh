@@ -51,9 +51,11 @@ button:disabled {
   max-width: 560px;
 }
 
-.login-copy strong {
-  color: #136f63;
-  font-size: 24px;
+.hero-logo {
+  display: block;
+  height: auto;
+  max-width: 260px;
+  width: 58%;
 }
 
 .login-copy h1 {
@@ -75,7 +77,7 @@ button:disabled {
 .auth-tabs {
   display: grid;
   gap: 8px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-bottom: 16px;
 }
 
@@ -89,6 +91,12 @@ button:disabled {
   background: #136f63;
   border-color: #136f63;
   color: white;
+}
+
+.secondary-button {
+  background: #f6fbfc;
+  border: 1px solid #d4e3e5;
+  color: #15202b;
 }
 
 .role-choice {
@@ -138,8 +146,13 @@ button:disabled {
   margin-bottom: 24px;
 }
 
-.brand strong {
-  font-size: 24px;
+.nav-logo {
+  background: #edf5f7;
+  border-radius: 8px;
+  height: auto;
+  margin-bottom: 6px;
+  max-width: 162px;
+  width: 100%;
 }
 
 .brand span {
@@ -213,6 +226,7 @@ button:disabled {
   background: white;
   border: 1px solid #d4e3e5;
   border-radius: 8px;
+  min-width: 0;
   padding: 16px;
 }
 
@@ -530,18 +544,35 @@ textarea {
   border-bottom: 1px solid #e4eff1;
   display: grid;
   gap: 10px;
-  grid-template-columns: 1fr 110px auto;
+  grid-template-columns: minmax(0, 1fr) minmax(82px, 110px) max-content;
+  min-width: 0;
   padding: 10px 0;
 }
 
 .market-row span {
   display: grid;
   gap: 2px;
+  line-height: 1.2;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .market-row small {
   color: #5d7076;
   font-size: 12px;
+}
+
+.market-row > strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.market-row > input {
+  min-width: 0;
+}
+
+.market-row > button {
+  white-space: nowrap;
 }
 
 .market-note {
@@ -558,7 +589,7 @@ textarea {
   align-items: center;
   display: grid;
   gap: 10px;
-  grid-template-columns: 46px 1fr;
+  grid-template-columns: 46px minmax(0, 1fr);
   min-width: 0;
 }
 
@@ -608,6 +639,10 @@ textarea {
   .login-screen,
   .role-choice {
     grid-template-columns: 1fr;
+  }
+
+  .auth-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .login-screen {
@@ -716,6 +751,7 @@ textarea {
 .rank-list {
   display: grid;
   gap: 10px;
+  min-width: 0;
 }
 
 .rank-row.enhanced {
@@ -724,7 +760,7 @@ textarea {
   border-radius: 12px;
   display: grid;
   gap: 12px;
-  grid-template-columns: 54px 1fr auto;
+  grid-template-columns: 44px minmax(0, 1fr);
   padding: 14px;
 }
 
@@ -744,6 +780,8 @@ textarea {
   display: grid;
   gap: 2px;
   font-weight: 700;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .rank-name small {
@@ -754,7 +792,21 @@ textarea {
 
 .rank-value {
   color: #136f63;
-  white-space: nowrap;
+  grid-column: 2;
+  justify-self: start;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1200px) {
+  .market-row {
+    grid-template-columns: minmax(0, 1fr) minmax(82px, 120px);
+  }
+
+  .market-row button {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
 }
 
 @media (max-width: 700px) {

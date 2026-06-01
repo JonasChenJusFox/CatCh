@@ -1,9 +1,12 @@
 """Tests for the CatCh auth-service FastAPI app."""
 
 import importlib.util
+import os
 from pathlib import Path
 
 from fastapi.testclient import TestClient
+
+os.environ["MONGO_URL"] = ""
 
 MODULE_PATH = Path(__file__).resolve().parents[1] / "app" / "main.py"
 spec = importlib.util.spec_from_file_location("auth_service_main", MODULE_PATH)
@@ -17,6 +20,7 @@ def setup_function():
     """Reset in-memory users before each test."""
 
     auth_main.local_users.clear()
+    auth_main.local_verification_codes.clear()
 
 
 def signup_payload(**overrides):
@@ -143,6 +147,221 @@ def test_login_rejects_wrong_password():
     )
     assert response.status_code == 401
     assert response.json()["detail"] == "Invalid username or password"
+
+
+def test_request_verification_code_hashes_code_and_sends_email(monkeypatch):
+    """Requesting a code stores only a hash and sends the plain code by email."""
+
+    sent = {}
+
+    def fake_send(email, code):
+        sent["email"] = email
+        sent["code"] = code
+
+    monkeypatch.setattr(auth_main, "send_verification_email", fake_send)
+
+    response = client.post(
+        "/auth/verification-code/request",
+        json={"email": "kitten@example.com", "role": "kitten"},
+    )
+
+    assert response.status_code == 200
+    assert sent["email"] == "kitten@example.com"
+    record = auth_main.local_verification_codes["kitten@example.com"]
+    assert record["code_hash"] != sent["code"]
+    assert record["attempts"] == 0
+
+
+def test_request_verification_code_console_delivery_returns_debug_code(monkeypatch):
+    """Local demo mode returns the code without requiring SMTP network access."""
+
+    monkeypatch.setattr(auth_main, "VERIFICATION_CODE_DELIVERY", "console")
+
+    response = client.post(
+        "/auth/verification-code/request",
+        json={"email": "kitten@example.com", "role": "kitten"},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["debug_code"]
+    record = auth_main.local_verification_codes["kitten@example.com"]
+    assert record["code_hash"] != body["debug_code"]
+
+
+def test_request_verification_code_deletes_record_when_send_fails(monkeypatch):
+    """A failed SMTP send should not leave an unusable verification code."""
+
+    def fail_send(_email, _code):
+        raise auth_main.HTTPException(
+            status_code=502,
+            detail="Verification email service is unavailable",
+        )
+
+    monkeypatch.setattr(auth_main, "send_verification_email", fail_send)
+
+    response = client.post(
+        "/auth/verification-code/request",
+        json={"email": "kitten@example.com", "role": "kitten"},
+    )
+
+    assert response.status_code == 502
+    assert "kitten@example.com" not in auth_main.local_verification_codes
+
+
+def test_send_verification_email_reports_authentication_failure(monkeypatch):
+    """Rejected SMTP credentials should produce a clear operator-facing error."""
+
+    class FakeSMTP:
+        def __init__(self, *_args, **_kwargs):
+            pass
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return False
+
+        def starttls(self):
+            return None
+
+        def login(self, *_args):
+            raise auth_main.smtplib.SMTPAuthenticationError(
+                535,
+                b"Username and Password not accepted",
+            )
+
+    monkeypatch.setattr(auth_main, "VERIFICATION_CODE_DELIVERY", "smtp")
+    monkeypatch.setattr(auth_main, "SMTP_HOST", "smtp.gmail.com")
+    monkeypatch.setattr(auth_main, "SMTP_FROM_EMAIL", "fishlikecat@gmail.com")
+    monkeypatch.setattr(auth_main.smtplib, "SMTP", FakeSMTP)
+
+    try:
+        auth_main.send_verification_email("kitten@example.com", "123456")
+    except auth_main.HTTPException as exc:
+        assert exc.status_code == 502
+        assert exc.detail == "SMTP username or app password was rejected"
+    else:
+        raise AssertionError("Expected SMTP authentication failure")
+
+
+def test_smtp_diagnostics_reports_console_mode(monkeypatch):
+    """Console mode should be reported as locally usable."""
+
+    monkeypatch.setattr(auth_main, "VERIFICATION_CODE_DELIVERY", "console")
+
+    response = client.get("/auth/smtp/diagnostics")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["delivery_mode"] == "console"
+    assert body["auth_ok"] is True
+
+
+def test_smtp_diagnostics_reports_tcp_failure(monkeypatch):
+    """Network failures should identify the TCP stage."""
+
+    def fail_smtp(*_args, **_kwargs):
+        raise OSError("Network is unreachable")
+
+    monkeypatch.setattr(auth_main, "VERIFICATION_CODE_DELIVERY", "smtp")
+    monkeypatch.setattr(auth_main, "SMTP_HOST", "smtp.gmail.com")
+    monkeypatch.setattr(auth_main, "SMTP_FROM_EMAIL", "fishlikescat@gmail.com")
+    monkeypatch.setattr(auth_main.smtplib, "SMTP", fail_smtp)
+
+    response = client.get("/auth/smtp/diagnostics")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["dns_ok"] is True
+    assert body["tcp_ok"] is False
+    assert body["error_stage"] == "tcp"
+    assert "Network is unreachable" in body["error"]
+
+
+def test_smtp_diagnostics_reports_auth_failure(monkeypatch):
+    """Rejected SMTP credentials should be visible in diagnostics."""
+
+    class FakeSMTP:
+        def __init__(self, *_args, **_kwargs):
+            pass
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return False
+
+        def starttls(self):
+            return None
+
+        def login(self, *_args):
+            raise auth_main.smtplib.SMTPAuthenticationError(
+                535,
+                b"Username and Password not accepted",
+            )
+
+    monkeypatch.setattr(auth_main, "VERIFICATION_CODE_DELIVERY", "smtp")
+    monkeypatch.setattr(auth_main, "SMTP_HOST", "smtp.gmail.com")
+    monkeypatch.setattr(auth_main, "SMTP_FROM_EMAIL", "fishlikescat@gmail.com")
+    monkeypatch.setattr(auth_main.smtplib, "SMTP", FakeSMTP)
+
+    response = client.get("/auth/smtp/diagnostics")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["tcp_ok"] is True
+    assert body["tls_ok"] is True
+    assert body["auth_ok"] is False
+    assert body["error_stage"] == "auth"
+
+
+def test_verification_code_login_issues_role_aware_jwt(monkeypatch):
+    """A valid emailed code creates a passwordless user and returns a JWT."""
+
+    sent = {}
+
+    def fake_send(email, code):
+        sent["email"] = email
+        sent["code"] = code
+
+    monkeypatch.setattr(auth_main, "send_verification_email", fake_send)
+    client.post(
+        "/auth/verification-code/request",
+        json={"email": "teacher@example.com", "role": "cat"},
+    )
+
+    response = client.post(
+        "/auth/verification-code/login",
+        json={"email": "teacher@example.com", "code": sent["code"], "role": "cat"},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["email"] == "teacher@example.com"
+    assert body["role"] == "cat"
+    assert body["token_system_enabled"] is False
+    assert "teacher@example.com" not in auth_main.local_verification_codes
+
+
+def test_verification_code_login_rejects_wrong_code(monkeypatch):
+    """Invalid codes do not issue tokens and increment attempt counts."""
+
+    monkeypatch.setattr(
+        auth_main, "send_verification_email", lambda _email, _code: None
+    )
+    client.post(
+        "/auth/verification-code/request",
+        json={"email": "kitten@example.com", "role": "kitten"},
+    )
+
+    response = client.post(
+        "/auth/verification-code/login",
+        json={"email": "kitten@example.com", "code": "000000", "role": "kitten"},
+    )
+
+    assert response.status_code == 401
+    assert auth_main.local_verification_codes["kitten@example.com"]["attempts"] == 1
 
 
 def test_forgot_password_resets_matching_account():

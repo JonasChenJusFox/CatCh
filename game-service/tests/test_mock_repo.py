@@ -6,7 +6,7 @@ def test_seeds_loaded():
     problems = repo.list_problems()
     assert len(problems) == 74
     ids = {p["id"] for p in problems}
-    assert {"leetcode-1", "leetcode-3", "leetcode-121"}.issubset(ids)
+    assert {"problem-1", "problem-3", "problem-121"}.issubset(ids)
 
 
 def test_get_problem_returns_none_for_missing():
@@ -16,7 +16,7 @@ def test_get_problem_returns_none_for_missing():
 
 def test_get_problem_returns_full_record():
     repo = MockRepository.get_instance()
-    p = repo.get_problem("leetcode-1")
+    p = repo.get_problem("problem-1")
     assert p is not None
     assert p["function_name"] == "two_sum"
     assert "test_code" in p
@@ -38,16 +38,16 @@ def test_add_fishing_chances_accumulates():
 
 def test_record_submission_returns_id():
     repo = MockRepository.get_instance()
-    sub_id = repo.record_submission("u1", "leetcode-1", True, "code")
+    sub_id = repo.record_submission("u1", "problem-1", True, "code")
     assert isinstance(sub_id, str)
     assert len(sub_id) > 0
 
 
 def test_list_submissions_filters_by_user():
     repo = MockRepository.get_instance()
-    repo.record_submission("u1", "leetcode-1", True, "code1")
-    repo.record_submission("u2", "leetcode-1", False, "code2")
-    repo.record_submission("u1", "leetcode-3", True, "code3")
+    repo.record_submission("u1", "problem-1", True, "code1")
+    repo.record_submission("u2", "problem-1", False, "code2")
+    repo.record_submission("u1", "problem-3", True, "code3")
 
     u1_subs = repo.list_submissions("u1")
     assert len(u1_subs) == 2
@@ -86,7 +86,7 @@ def test_invalid_user_role_is_rejected():
 
 def test_duplicate_uncaught_problem_is_not_added_twice():
     repo = MockRepository.get_instance()
-    problem = repo.get_problem("leetcode-1")
+    problem = repo.get_problem("problem-1")
     assert repo.add_uncaught_problem("kitten-1", problem, 5) is True
     assert repo.add_uncaught_problem("kitten-1", problem, 5) is False
 

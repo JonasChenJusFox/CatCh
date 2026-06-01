@@ -48,7 +48,7 @@ Switch via env var: `DB_BACKEND=mock` or `DB_BACKEND=mongo`.
 
 ## Problem dataset
 
-Runtime problems come from `data/judgeable_problems.json`. The committed dataset contains 74 executable LeetCode-style entries. Each judgeable entry contains:
+Runtime problems come from `data/judgeable_problems.json`. The committed dataset contains 74 executable coding-practice entries. Each judgeable entry contains:
 
 - `id`, `title`, `difficulty`, `fishing_reward`
 - `function_name` — the function the student must implement
