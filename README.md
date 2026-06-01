@@ -248,49 +248,6 @@ cd frontend/app
 npm run build
 ```
 
-## Deploying Updates
-
-Production deploys are driven by the GitHub Actions workflows in `.github/workflows/`. On a push to `main` or `master`, each changed service workflow builds its Docker image, publishes it to Docker Hub, and, when deployment is enabled, asks DigitalOcean App Platform to create a new deployment.
-
-Before deploying, make sure these GitHub repository settings exist:
-
-- Secrets: `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`, `DIGITALOCEAN_ACCESS_TOKEN`, `DIGITALOCEAN_APP_ID`
-- Variable: `ENABLE_DO_DEPLOY=true`
-
-Make sure the DigitalOcean App environment contains the real production values:
-
-- `MONGO_URL` and `MONGO_DB` for Atlas
-- `JWT_SECRET`, `VERIFICATION_CODE_PEPPER`, and `VERIFICATION_CODE_DELIVERY=smtp`
-- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_FROM_EMAIL`, `SMTP_REPLY_TO`, `SMTP_USE_TLS`, `SMTP_TIMEOUT_SECONDS`
-- Frontend API URLs or component routes matching the deployed App Platform services
-
-Deploy flow:
-
-```bash
-git status
-git add README.md .env.example docker-compose.yml \
-  auth-service/app/main.py auth-service/tests/test_auth.py \
-  frontend/app/src/App.jsx frontend/app/src/styles.css frontend/app/src/assets/catch.png \
-  data/README.md data/catch.png data/judgeable_problems.json data/problem_set_raw.csv \
-  game-service/README.md game-service/tests/test_mock_repo.py game-service/tests/test_quiz.py \
-  scripts/README.md
-git commit -m "Polish auth, problem set, and responsive UI"
-git push origin main
-```
-
-Do not commit `.env` or local scratch datasets such as `data/problems.json`.
-
-Then open GitHub Actions and wait for the relevant workflows to pass: `frontend-app`, `auth-service`, `game-service`, and any other service touched by the commit. The final deploy step should run `doctl apps create-deployment ... --wait`.
-
-After DigitalOcean finishes deploying, verify:
-
-```bash
-curl https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-auth-servi/health
-curl https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-auth-servi/auth/smtp/diagnostics
-curl https://catch-a8gtz.ondigitalocean.app/jonaschenjusfox-catch-game-servi/health
-```
-
-Then hard-refresh the live app and check that email-code login works, marketplace and leaderboard cards fit at smaller widths, and Network requests use `problem-*` problem IDs. If an existing production database still has old seeded problems, restart `game-service` after the new image deploys so the static problem set is re-synced.
 
 ## Repository Layout
 
