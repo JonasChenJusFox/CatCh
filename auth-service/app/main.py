@@ -5,6 +5,8 @@ describes the authenticated user's role; gameplay permissions are enforced by
 downstream services.
 """
 
+# pylint: disable=too-many-lines
+
 import base64
 import hashlib
 import hmac

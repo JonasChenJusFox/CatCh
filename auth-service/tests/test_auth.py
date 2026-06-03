@@ -213,19 +213,26 @@ def test_send_verification_email_reports_authentication_failure(monkeypatch):
     """Rejected SMTP credentials should produce a clear operator-facing error."""
 
     class FakeSMTP:
+        """Context-manager fake that rejects SMTP authentication."""
+
         def __init__(self, *_args, **_kwargs):
-            pass
+            """Accept SMTP constructor arguments without opening a socket."""
+            self.started_tls = False
 
         def __enter__(self):
+            """Return the fake SMTP session."""
             return self
 
         def __exit__(self, *_args):
+            """Do not suppress exceptions raised inside the context."""
             return False
 
         def starttls(self):
-            return None
+            """Record that STARTTLS was requested."""
+            self.started_tls = True
 
         def login(self, *_args):
+            """Reject all login attempts like Gmail would for bad credentials."""
             raise auth_main.smtplib.SMTPAuthenticationError(
                 535,
                 b"Username and Password not accepted",
@@ -283,19 +290,26 @@ def test_smtp_diagnostics_reports_auth_failure(monkeypatch):
     """Rejected SMTP credentials should be visible in diagnostics."""
 
     class FakeSMTP:
+        """Context-manager fake that rejects SMTP authentication."""
+
         def __init__(self, *_args, **_kwargs):
-            pass
+            """Accept SMTP constructor arguments without opening a socket."""
+            self.started_tls = False
 
         def __enter__(self):
+            """Return the fake SMTP session."""
             return self
 
         def __exit__(self, *_args):
+            """Do not suppress exceptions raised inside the context."""
             return False
 
         def starttls(self):
-            return None
+            """Record that STARTTLS was requested."""
+            self.started_tls = True
 
         def login(self, *_args):
+            """Reject all login attempts like Gmail would for bad credentials."""
             raise auth_main.smtplib.SMTPAuthenticationError(
                 535,
                 b"Username and Password not accepted",
