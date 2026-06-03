@@ -240,6 +240,8 @@ def test_send_verification_email_reports_authentication_failure(monkeypatch):
 
     monkeypatch.setattr(auth_main, "VERIFICATION_CODE_DELIVERY", "smtp")
     monkeypatch.setattr(auth_main, "SMTP_HOST", "smtp.gmail.com")
+    monkeypatch.setattr(auth_main, "SMTP_USERNAME", "fishlikecat@gmail.com")
+    monkeypatch.setattr(auth_main, "SMTP_PASSWORD", "bad-app-password")
     monkeypatch.setattr(auth_main, "SMTP_FROM_EMAIL", "fishlikecat@gmail.com")
     monkeypatch.setattr(auth_main.smtplib, "SMTP", FakeSMTP)
 
@@ -317,6 +319,8 @@ def test_smtp_diagnostics_reports_auth_failure(monkeypatch):
 
     monkeypatch.setattr(auth_main, "VERIFICATION_CODE_DELIVERY", "smtp")
     monkeypatch.setattr(auth_main, "SMTP_HOST", "smtp.gmail.com")
+    monkeypatch.setattr(auth_main, "SMTP_USERNAME", "fishlikescat@gmail.com")
+    monkeypatch.setattr(auth_main, "SMTP_PASSWORD", "bad-app-password")
     monkeypatch.setattr(auth_main, "SMTP_FROM_EMAIL", "fishlikescat@gmail.com")
     monkeypatch.setattr(auth_main.smtplib, "SMTP", FakeSMTP)
 
