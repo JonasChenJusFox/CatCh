@@ -248,49 +248,6 @@ cd frontend/app
 npm run build
 ```
 
-## Deploying Updates
-
-Production images are built by the GitHub Actions workflows in `.github/workflows/`. On a push to `main` or `master`, each service workflow runs checks, builds its Docker image, and publishes `latest` plus commit-SHA tags to Docker Hub. DigitalOcean App Platform should be configured to deploy from those Docker Hub images.
-
-Before deploying, make sure these GitHub repository settings exist:
-
-- Secrets: `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`
-
-Make sure the DigitalOcean App environment contains the real production values:
-
-- `MONGO_URL` and `MONGO_DB` for Atlas
-- `JWT_SECRET`, `VERIFICATION_CODE_PEPPER`, and `VERIFICATION_CODE_DELIVERY=smtp`
-- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SMTP_FROM_EMAIL`, `SMTP_REPLY_TO`, `SMTP_USE_TLS`, `SMTP_TIMEOUT_SECONDS`
-- Frontend API URLs or component routes matching the deployed App Platform services
-
-Deploy flow:
-
-```bash
-git status
-git add README.md .env.example docker-compose.yml \
-  auth-service/app/main.py auth-service/tests/test_auth.py \
-  frontend/app/src/App.jsx frontend/app/src/styles.css frontend/app/src/assets/catch.png \
-  data/README.md data/catch.png data/judgeable_problems.json data/problem_set_raw.csv \
-  game-service/README.md game-service/tests/test_mock_repo.py game-service/tests/test_quiz.py \
-  scripts/README.md
-git commit -m "Polish auth, problem set, and responsive UI"
-git push origin main
-```
-
-Do not commit `.env` or local scratch datasets such as `data/problems.json`.
-
-Then open GitHub Actions and wait for the relevant workflows to pass: `frontend-app`, `auth-service`, `game-service`, and any other service touched by the commit. After the Docker Hub images are published, redeploy the matching DigitalOcean components from their `latest` image tags, or enable image-based autodeploy in DigitalOcean.
-
-After DigitalOcean finishes deploying, verify:
-
-```bash
-curl https://catch-bpp85.ondigitalocean.app/catch-auth-service/health
-curl https://catch-bpp85.ondigitalocean.app/catch-auth-service/auth/smtp/diagnostics
-curl https://catch-bpp85.ondigitalocean.app/catch-game-service/health
-```
-
-Then hard-refresh the live app and check that email-code login works, marketplace and leaderboard cards fit at smaller widths, and the coding practice problem list loads normally. If an existing production database still has older seeded demo content, restart `game-service` after the new image deploys so the static problem set is re-synced.
-
 ## Repository Layout
 
 ```text
