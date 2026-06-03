@@ -250,12 +250,11 @@ npm run build
 
 ## Deploying Updates
 
-Production deploys are driven by the GitHub Actions workflows in `.github/workflows/`. On a push to `main` or `master`, each changed service workflow builds its Docker image, publishes it to Docker Hub, and, when deployment is enabled, asks DigitalOcean App Platform to create a new deployment.
+Production images are built by the GitHub Actions workflows in `.github/workflows/`. On a push to `main` or `master`, each service workflow runs checks, builds its Docker image, and publishes `latest` plus commit-SHA tags to Docker Hub. DigitalOcean App Platform should be configured to deploy from those Docker Hub images.
 
 Before deploying, make sure these GitHub repository settings exist:
 
-- Secrets: `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`, `DIGITALOCEAN_ACCESS_TOKEN`, `DIGITALOCEAN_APP_ID`
-- Variable: `ENABLE_DO_DEPLOY=true`
+- Secrets: `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`
 
 Make sure the DigitalOcean App environment contains the real production values:
 
@@ -280,7 +279,7 @@ git push origin main
 
 Do not commit `.env` or local scratch datasets such as `data/problems.json`.
 
-Then open GitHub Actions and wait for the relevant workflows to pass: `frontend-app`, `auth-service`, `game-service`, and any other service touched by the commit. The final deploy step should run `doctl apps create-deployment ... --wait`.
+Then open GitHub Actions and wait for the relevant workflows to pass: `frontend-app`, `auth-service`, `game-service`, and any other service touched by the commit. After the Docker Hub images are published, redeploy the matching DigitalOcean components from their `latest` image tags, or enable image-based autodeploy in DigitalOcean.
 
 After DigitalOcean finishes deploying, verify:
 

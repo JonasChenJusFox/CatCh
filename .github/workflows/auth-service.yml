@@ -63,13 +63,3 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
-
-      - name: Install doctl
-        if: github.event_name == 'push' && vars.ENABLE_DO_DEPLOY == 'true'
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-
-      - name: Deploy DigitalOcean app
-        if: github.event_name == 'push' && vars.ENABLE_DO_DEPLOY == 'true'
-        run: doctl apps create-deployment "${{ secrets.DIGITALOCEAN_APP_ID }}" --wait
