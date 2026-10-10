@@ -17,7 +17,7 @@ This repository is my polished portfolio version of the project. It emphasizes p
 
 ## Demo
 
-Live app: [https://catch-bpp85.ondigitalocean.app](https://catch-bpp85.ondigitalocean.app)
+Live app: Temporarily cancel the online deployment. It will be restored later.
 
 | Component | URL |
 |---|---|
